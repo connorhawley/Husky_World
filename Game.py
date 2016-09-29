@@ -21,10 +21,14 @@ class Game:
             self.handle_events()
             self.update()
             self.draw()
+            self.player.handle_input()
+
 
     def new_game(self):
         #reset game/start new game
-
+        self.sprites = pygame.sprite.Group()
+        self.player = Player()
+        self.sprites.add(self.player)
         self.run_game_loop()
 
     def handle_events(self):
@@ -35,15 +39,17 @@ class Game:
                 if self.playing:
                     self.playing = False
                 self.gameRunning = False
-                sys.exit
+
 
     def update(self):
-
-        pass
+        self.sprites.update()
 
     def draw(self):
-        #game loop draw function-sets background to black and updates the screen
-        self.screen.fill(BLACK)
+        #Draw the level
+        #set background to white
+        self.screen.fill(WHITE)
+        #draw the sprites
+        self.sprites.draw(self.screen)
         pygame.display.flip()
 
     def display_main_menu(self):

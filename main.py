@@ -10,7 +10,6 @@ game = Game()
 
 while game.gameRunning:
     game.new_game()
-    player.handle_keys()
-    player.draw(game.screen)
     pygame.display.update()
+
 

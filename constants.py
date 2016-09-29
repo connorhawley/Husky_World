@@ -21,4 +21,6 @@ FPS = 60
 #set path for the player sprite
 player_sprite = 'data/sprites/dog.png'
 #speed of sprite
-jonathan_speed = 5
+player_speed = 5
+jump_height = 15
+gravity = 5
