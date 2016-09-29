@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
 
     #draws player sprite to screen
     def draw(self, surface):
-        surface.blit(self.image, (self.x, self.y))
+        surface.blit(self.image, (self.rect.x, self.rect.y))
 
 
     #handles the player input
