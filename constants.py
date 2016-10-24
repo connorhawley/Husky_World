@@ -3,12 +3,12 @@ import pygame, os
 #This file contains constants (colors, paths, etc)
 
 #Window size
-WINDOW_HEIGHT = 1024
-WINDOW_WIDTH = 768
-SIZE = (WINDOW_HEIGHT,WINDOW_WIDTH)
+WINDOW_HEIGHT = 768
+WINDOW_WIDTH = 1024
+SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 #set game title
 TITLE = "Husky World"
-#Tuples for colors
+#Colors
 RED = (255,0,0)
 BLUE = (0,0,255)
 GREEN = (0,255,0)
@@ -22,5 +22,3 @@ FPS = 60
 player_sprite = 'data/sprites/dog.png'
 #speed of sprite
 player_speed = 5
-jump_height = 15
-gravity = 5

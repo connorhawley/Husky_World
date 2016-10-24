@@ -1,7 +1,8 @@
 import pygame, sys
 from pygame.locals import *
 from constants import *
-from Player import *
+from Player import Player
+from Platform import Platform
 
 class Game:
     def __init__(self):
@@ -21,14 +22,55 @@ class Game:
             self.handle_events()
             self.update()
             self.draw()
-            self.player.handle_input()
+            self.player.handle_input(self.platforms)
+
 
 
     def new_game(self):
         #reset game/start new game
         self.sprites = pygame.sprite.Group()
+        self.platforms = pygame.sprite.Group()
         self.player = Player()
         self.sprites.add(self.player)
+        self.platformlist = pygame.sprite.Group()
+        self.platforms = []
+        x = y = 0
+        level = [
+            "               PPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+            "                                           P",
+            "                                           P",
+            "                                           P",
+            "                                           P",
+            "                                           P",
+            "                                           P",
+            "P                                          P",
+            "P                                          P",
+            "P                                          P",
+            "P                          PPPPPPP         P",
+            "P                 PPPPPP                   P",
+            "P                                          P",
+            "P         PPPPPPP                          P",
+            "P                                          P",
+            "P                     PPPPPP               P",
+            "P                                          P",
+            "P   PPPPPPPPPPP                            P",
+            "P                                          P",
+            "P                 PPPPPPPPPPP              P",
+            "P                                          P",
+            "P                                          P",
+            "P                                          P",
+            "P                                          P",
+            "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ]
+        # build the level
+        for row in level:
+            for col in row:
+                if col == "P":
+                    p = Platform(x, y)
+                    self.platforms.append(p)
+                    self.platformlist.add(p)
+                x += 32
+            y += 32
+            x = 0
         self.run_game_loop()
 
     def handle_events(self):
@@ -41,8 +83,12 @@ class Game:
                 self.gameRunning = False
 
 
+
+
     def update(self):
         self.sprites.update()
+        self.platformlist.update()
+
 
     def draw(self):
         #Draw the level
@@ -50,6 +96,8 @@ class Game:
         self.screen.fill(WHITE)
         #draw the sprites
         self.sprites.draw(self.screen)
+        #draw the entities list to the screen (platforms)
+        self.platformlist.draw(self.screen)
         pygame.display.flip()
 
     def display_main_menu(self):
