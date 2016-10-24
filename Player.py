@@ -10,23 +10,57 @@ class Player(pygame.sprite.Sprite):
         #create player sprite image
         self.image = pygame.image.load(player_sprite)
         self.rect = self.image.get_rect()
-        #self.x = 0
-        #self.y = 0
+        self.onGround = False
+        self.dx = 0
+        self.dy = 0
 
     def jump(self):
-
         pass
 
-    def update(self):
-       self.gravity()
-       #check collisions with platforms
+    def handle_input(self, platforms):
+        key = pygame.key.get_pressed()
+        if key[pygame.K_UP]:
+            if self.onGround:
+                self.dy -= 20
+        if key[pygame.K_DOWN]:
+            pass
+        if key[pygame.K_LEFT]:
+            self.dx = -8
+        if key[pygame.K_RIGHT]:
+            self.dx = 8
+        if not self.onGround:
+            self.dy += 0.5
+        if not(key[pygame.K_LEFT] or key[pygame.K_RIGHT]):
+            self.dx = 0
+
+        self.rect.left += self.dx
+        #collision for x axis
+        self.collide(self.dx, 0, platforms)
+        self.rect.top += self.dy
+        self.onGround = False
+        #collision for y axis
+        self.collide(0, self.dy, platforms)
+
 
     def gravity(self):
-        #calculate gravity on player
-        if self.rect.y == 0:
-            self.rect.y = 1
-        else:
-            self.rect.y += gravity
+        pass
+
+    def collide(self, dx, dy, platforms):
+        for p in platforms:
+            if pygame.sprite.collide_rect(self, p):
+                if dx > 0:
+                    #colliding on the right
+                    self.rect.right = p.rect.left
+                if dx < 0:
+                    self.rect.left = p.rect.right
+                    #colliding on the left
+                if dy > 0:
+                    #you are on the ground
+                    self.rect.bottom = p.rect.top
+                    self.onGround = True
+                    self.dy = 0
+                if dy < 0:
+                    self.rect.top = p.rect.bottom
 
     #draws player sprite to screen
     def draw(self, surface):
@@ -34,16 +68,16 @@ class Player(pygame.sprite.Sprite):
 
 
     #handles the player input
-    def handle_input(self):
-        key = pygame.key.get_pressed()
-        dist = player_speed
-        if key[pygame.K_DOWN]:
-            self.rect.y += dist
-        if key[pygame.K_UP]:
-            self.rect.y -= jump_height
-        if key[pygame.K_RIGHT]:
-            self.rect.x += dist
-        if key[pygame.K_LEFT]:
-            self.rect.x -= dist
+    # def handle_input(self):
+    #     key = pygame.key.get_pressed()
+    #     dist = player_speed
+    #     if key[pygame.K_DOWN]:
+    #         self.rect.y += dist
+    #     if key[pygame.K_UP]:
+    #         self.rect.y -= dist
+    #     if key[pygame.K_RIGHT]:
+    #         self.rect.x += dist
+    #     if key[pygame.K_LEFT]:
+    #         self.rect.x -= dist
 
 
