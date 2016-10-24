@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
         key = pygame.key.get_pressed()
         if key[pygame.K_UP]:
             if self.onGround:
-                self.dy = 10
+                self.dy -= 20
         if key[pygame.K_DOWN]:
             pass
         if key[pygame.K_LEFT]:
