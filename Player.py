@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from constants import *
 
+
 class Player(pygame.sprite.Sprite):
 
     def __init__(self):
@@ -21,13 +22,16 @@ class Player(pygame.sprite.Sprite):
         key = pygame.key.get_pressed()
         if key[pygame.K_UP]:
             if self.onGround:
-                self.dy = 10
+                self.dy -= 16
+
         if key[pygame.K_DOWN]:
             pass
         if key[pygame.K_LEFT]:
             self.dx = -8
+
         if key[pygame.K_RIGHT]:
             self.dx = 8
+
         if not self.onGround:
             self.dy += 0.5
         if not(key[pygame.K_LEFT] or key[pygame.K_RIGHT]):
@@ -61,6 +65,7 @@ class Player(pygame.sprite.Sprite):
                     self.dy = 0
                 if dy < 0:
                     self.rect.top = p.rect.bottom
+                    self.dy += 2
 
     #draws player sprite to screen
     def draw(self, surface):
