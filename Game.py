@@ -27,6 +27,7 @@ class Game:
             self.player.handle_input(self.platforms)
 
 
+
     def new_game(self):
         #reset game/start new game
      #   self.display_main_menu()
@@ -74,6 +75,9 @@ class Game:
             y += 32
             x = 0
 
+        self.total_level_width = len(level[0])*32
+        self.total_level_height = len(level)*32
+
         self.run_game_loop()
 
     def handle_events(self):
@@ -91,19 +95,23 @@ class Game:
 
 
     def update(self):
+        #update sprite and platform lists
         self.sprites.update()
         self.platformlist.update()
 
 
-
     def draw(self):
-        #Draw the level
         #set background to white
         self.screen.fill(WHITE)
-        #draw the sprites list to the screen
-        self.sprites.draw(self.screen)
-        #draw the platform list to the screen
-        self.platformlist.draw(self.screen)
+        #create camera that stops scrolling when you reach edges
+        camera = Camera(complex_camera, self.total_level_width, self.total_level_height)
+        #create camera that is centered around the player
+        #camera = Camera(simple_camera, self.total_level_width, self.total_level_height)
+        camera.update(self.player)
+        for sprite in self.sprites:
+            self.screen.blit(sprite.image, camera.apply(sprite))
+        for platform in self.platformlist:
+            self.screen.blit(platform.image, camera.apply(platform))
         pygame.display.flip()
 
 
@@ -111,37 +119,37 @@ class Game:
     def display_main_menu(self):
         #display main menu
 
-        displayMenu = True
+        main_menu_open = True
+        # create mouse cursor arrow
         mainMenuCursor = MenuCursor()
         selectedOption = 'play'
-        while displayMenu:
+        while main_menu_open:
+
+            #set background to white
             self.screen.fill(WHITE)
-            #menu_arrow = pygame.image.load(menu_select_sprite)
-            #menu_arrow_rect = menu_arrow.get_rect()
-            #self.screen.blit(menu_arrow, (350, 259))
-            #arrowLeft = self.print_msg_to_screen('>', BLUE, 'large', -100, -100)
-            #arrowRight = self.print_msg_to_screen('<', BLUE, 'large', 100, -100)
+            #draw play and quit text to the screen
             self.print_msg_to_screen('Play', RED, 'large', 0, -100)
             self.print_msg_to_screen('Quit', RED, 'large', 0, 100)
-
+            #draw menu arrow cursor on the screen
             mainMenuCursor.draw(self.screen)
             self.keypressed = pygame.key.get_pressed()
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                    #259 is the center y coordinate of the Play text
                 if mainMenuCursor.rect.y == 259:
                     if self.keypressed[K_RETURN]:
-                        displayMenu = False
+                        main_menu_open = False
                     elif self.keypressed[K_DOWN]:
                         mainMenuCursor.moveToQuit()
-                        self.screen.blit(mainMenuCursor.image, (300, 459))
+                        self.screen.blit(mainMenuCursor.image, (350, 459))
+                    #459 is the center y coordinate of the Play text
                 if mainMenuCursor.rect.y == 459:
                     if self.keypressed[K_RETURN]:
                         pygame.quit()
                     elif self.keypressed[K_UP]:
                         mainMenuCursor.moveToPlay()
-                        self.screen.blit(mainMenuCursor.image, (300, 259))
+                        self.screen.blit(mainMenuCursor.image, (350, 259))
 
             pygame.display.update()
             #self.fpsClock.tick(30)
@@ -154,20 +162,25 @@ class Game:
 
 
     def pause(self):
+
+        #pause the game when escape key is pressed
         self.paused = True
-        self.print_msg_to_screen('Paused', BLACK, 'large')
+        self.print_msg_to_screen('Paused, press Q to quit', BLACK, 'large')
         pygame.display.update()
         while self.paused:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                if pygame.key.get_pressed()[pygame.K_q]:
+                    pygame.quit()
                 if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                    print('unpausing')
+                    #print('unpausing')
                     self.paused = False
 
        #self.fpsClock.tick(3)
 
 
+    #function to create text object on screen with specific message, color, size(Sizes specific in constants script)
     def text_objects(self, msg, color, size):
         if size == 'small':
             textSurface = SMALLFONT.render(msg, True, color)
@@ -179,10 +192,12 @@ class Game:
             textSurface = LARGEFONT.render(msg, True, color)
             return textSurface, textSurface.get_rect()
 
-    # function to display textmessages on screen
+    # function to display text messages on screen.
+    # (creates a message that can be offset based off of the center of the window using dx and dy)
     def print_msg_to_screen(self, msg, color, size='large', dx=0, dy=0):
         textSurface, textRect = self.text_objects(msg, color, size)
         # => get_rect().center returns a rectangle covering the surface, in this case it's the text ones
         textRect.center = (HALF_WINDOW_WIDTH + dx), (HALF_WINDOW_HEIGHT + dy)
         self.screen.blit(textSurface, textRect)
+        return [textRect.left, textRect.centery]
        # print(textRect.left, textRect.centery)

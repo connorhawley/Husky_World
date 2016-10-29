@@ -1,4 +1,4 @@
-import pygame, os
+import pygame
 
 #This file contains constants (colors, paths, etc)
 
