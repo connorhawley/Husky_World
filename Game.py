@@ -27,7 +27,6 @@ class Game:
             self.player.handle_input(self.platforms)
 
 
-
     def new_game(self):
         #reset game/start new game
      #   self.display_main_menu()
@@ -46,13 +45,13 @@ class Game:
             "                                           P",
             "                                           P",
             "                                           P",
-            "P         PPPPPPPPPPP                                 P",
+            "P         PPPPPPPPPPP                      P",
             "P                                          P",
             "P                                          P",
             "P                          PPPPPPP         P",
             "P                 PPPPPP                   P",
             "P                                          P",
-            "P         PPPPPPP                          P",
+            "P      PPPPPPPPPP                          P",
             "P                                          P",
             "P                     PPPPPP               P",
             "P                                          P",
@@ -152,7 +151,6 @@ class Game:
                         self.screen.blit(mainMenuCursor.image, (350, 259))
 
             pygame.display.update()
-            #self.fpsClock.tick(30)
 
 
 
