@@ -20,13 +20,20 @@ BLACK = (0,0,0)
 
 #Fonts
 pygame.font.init()
-SMALLFONT = pygame.font.SysFont('data / fonts / freesansbold.ttf', 25)
+SMALLFONT = pygame.font.SysFont('data/fonts/freesansbold.ttf', 25)
 MEDIUMFONT = pygame.font.SysFont('data/fonts/freesansbold.ttf', 50)
 LARGEFONT = pygame.font.SysFont('data/fonts/freesansbold.ttf', 100)
 
 #Set FPS for game to run at
 FPS = 60
-#set path for the player sprite
-player_sprite = 'data/sprites/dog.png'
+#set path for sprites
+PLAYER_SPRITE = 'data/sprites/dog.png'
+MENU_SELECT_SPRITE = 'data/sprites/menu_select_sprite.png'
+BALL_SPRITE = 'data/sprites/ball.png'
 
-menu_select_sprite = 'data/sprites/menu_select_sprite.png'
+
+
+
+GRAVITY = 0.5
+JUMP_HEIGHT = 16
+PLAYER_SPEED = 8

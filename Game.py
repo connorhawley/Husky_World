@@ -1,10 +1,11 @@
-import pygame, sys
-from pygame.locals import *
-from constants import *
 from Player import Player
 from Platform import Platform
 from Camera import *
 from MenuCursor import MenuCursor
+from Ball import Ball
+
+from pytmx.util_pygame import load_pygame
+import pytmx
 
 class Game:
     def __init__(self):
@@ -29,9 +30,8 @@ class Game:
 
     def new_game(self):
         #reset game/start new game
-     #   self.display_main_menu()
         self.sprites = pygame.sprite.Group()
-        self.platforms = pygame.sprite.Group()
+        self.ball_list = pygame.sprite.Group()
         self.player = Player()
         self.sprites.add(self.player)
         self.platformlist = pygame.sprite.Group()
@@ -90,18 +90,24 @@ class Game:
             if pygame.key.get_pressed()[K_ESCAPE]:
                 print('pausing')
                 self.pause()
-
+            if pygame.key.get_pressed()[K_SPACE]:
+                ball = Ball()
+                self.ball_list.add(ball)
+                ball.rect.x = self.player.rect.right
+                ball.rect.y = self.player.rect.centery
 
 
     def update(self):
         #update sprite and platform lists
         self.sprites.update()
         self.platformlist.update()
+        self.ball_list.update()
 
 
     def draw(self):
         #set background to white
         self.screen.fill(WHITE)
+        #self.render_tiles_to_screen('data/test.tmx')
         #create camera that stops scrolling when you reach edges
         camera = Camera(complex_camera, self.total_level_width, self.total_level_height)
         #create camera that is centered around the player
@@ -111,19 +117,22 @@ class Game:
             self.screen.blit(sprite.image, camera.apply(sprite))
         for platform in self.platformlist:
             self.screen.blit(platform.image, camera.apply(platform))
-        pygame.display.flip()
+        for ball in self.ball_list:
+            self.screen.blit(ball.image, camera.apply(ball))
+            self.block_hit_list = pygame.sprite.spritecollide(ball, self.platformlist, False)
+            for block in self.block_hit_list:
+                self.ball_list.remove(ball)
 
+        pygame.display.flip()
 
 
     def display_main_menu(self):
         #display main menu
-
         main_menu_open = True
         # create mouse cursor arrow
         mainMenuCursor = MenuCursor()
         selectedOption = 'play'
         while main_menu_open:
-
             #set background to white
             self.screen.fill(WHITE)
             #draw play and quit text to the screen
@@ -153,14 +162,12 @@ class Game:
             pygame.display.update()
 
 
-
-    def display_game_over_screen(selfs):
+    def display_game_over_screen(self):
         #display the game over screen
         pass
 
 
     def pause(self):
-
         #pause the game when escape key is pressed
         self.paused = True
         self.print_msg_to_screen('Paused, press Q to quit', BLACK, 'large')
@@ -199,3 +206,44 @@ class Game:
         self.screen.blit(textSurface, textRect)
         return [textRect.left, textRect.centery]
        # print(textRect.left, textRect.centery)
+
+    # def render_tiles_to_screen(self, filename):
+    #     tmx_data = load_pygame(filename)
+    #     if tmx_data.background_color:
+    #         self.screen.fill(pygame.Color(self.tmx_data.background_color))
+    #
+    #     # iterate over all the visible layers, then draw them
+    #     # according to the type of layer they are.
+    #     for layer in tmx_data.visible_layers:
+    #
+    #         # draw map tile layers
+    #         if isinstance(layer, pytmx.TiledTileLayer):
+    #
+    #             # iterate over the tiles in the layer
+    #             for x, y, image in layer.tiles():
+    #                 self.screen.blit(image, (x * tmx_data.tilewidth, y * tmx_data.tileheight))
+    #
+    #         # draw object layers
+    #         elif isinstance(layer, pytmx.TiledObjectGroup):
+    #
+    #             # iterate over all the objects in the layer
+    #             for obj in layer:
+    #
+    #                 # objects with points are polygons or lines
+    #                 if hasattr(obj, 'points'):
+    #                     pygame.draw.lines(self.screen, self.poly_color,
+    #                                       obj.closed, obj.points, 3)
+    #
+    #                 # some object have an image
+    #                 elif obj.image:
+    #                     self.screen.blit(obj.image, (obj.x, obj.y))
+    #
+    #                 # draw a rect for everything else
+    #                 else:
+    #                     pygame.draw.rect(self.screen, self.rect_color,
+    #                                      (obj.x, obj.y, obj.width, obj.height), 3)
+    #
+    #         # draw image layers
+    #         elif isinstance(layer, pytmx.TiledImageLayer):
+    #             if layer.image:
+    #                 self.screen.blit(layer.image, (0, 0))

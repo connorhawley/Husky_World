@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from constants import *
+from Ball import Ball
 
 
 class Player(pygame.sprite.Sprite):
@@ -9,7 +10,7 @@ class Player(pygame.sprite.Sprite):
         #call parent constructor
         super().__init__()
         #create player sprite image
-        self.image = pygame.image.load(player_sprite)
+        self.image = pygame.image.load(PLAYER_SPRITE)
         self.rect = self.image.get_rect()
         self.onGround = False
         self.dx = 0
@@ -20,20 +21,25 @@ class Player(pygame.sprite.Sprite):
 
     def handle_input(self, platforms):
         key = pygame.key.get_pressed()
+
+        if key[pygame.K_SPACE]:
+            pass
+
         if key[pygame.K_UP]:
             if self.onGround:
-                self.dy -= 16
+                self.dy -= JUMP_HEIGHT
 
         if key[pygame.K_DOWN]:
             pass
+
         if key[pygame.K_LEFT]:
-            self.dx = -8
+            self.dx = -PLAYER_SPEED
 
         if key[pygame.K_RIGHT]:
-            self.dx = 8
+            self.dx = PLAYER_SPEED
 
         if not self.onGround:
-            self.dy += 0.5
+            self.dy += GRAVITY
         if not(key[pygame.K_LEFT] or key[pygame.K_RIGHT]):
             self.dx = 0
 
@@ -50,21 +56,21 @@ class Player(pygame.sprite.Sprite):
         pass
 
     def collide(self, dx, dy, platforms):
-        for p in platforms:
-            if pygame.sprite.collide_rect(self, p):
+        for platform in platforms:
+            if pygame.sprite.collide_rect(self, platform):
                 if dx > 0:
                     #colliding on the right
-                    self.rect.right = p.rect.left
+                    self.rect.right = platform.rect.left
                 if dx < 0:
-                    self.rect.left = p.rect.right
+                    self.rect.left = platform.rect.right
                     #colliding on the left
                 if dy > 0:
                     #you are on the ground
-                    self.rect.bottom = p.rect.top
+                    self.rect.bottom = platform.rect.top
                     self.onGround = True
                     self.dy = 0
                 if dy < 0:
-                    self.rect.top = p.rect.bottom
+                    self.rect.top = platform.rect.bottom
                     self.dy += 2
 
     #draws player sprite to screen
