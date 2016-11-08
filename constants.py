@@ -17,23 +17,22 @@ GREEN = (0,255,0)
 PURPLE = (255,0,255)
 WHITE = (255,255,255)
 BLACK = (0,0,0)
+NAVY_BLUE = (0,14,47)
 
 #Fonts
 pygame.font.init()
-SMALLFONT = pygame.font.SysFont('data/fonts/freesansbold.ttf', 25)
-MEDIUMFONT = pygame.font.SysFont('data/fonts/freesansbold.ttf', 50)
-LARGEFONT = pygame.font.SysFont('data/fonts/freesansbold.ttf', 100)
+SMALLFONT = pygame.font.Font('data/fonts/uconn.ttf', 25)
+MEDIUMFONT = pygame.font.Font('data/fonts/uconn.ttf', 50)
+LARGEFONT = pygame.font.Font('data/fonts/uconn.ttf', 75)
 
 #Set FPS for game to run at
 FPS = 60
 #set path for sprites
-PLAYER_SPRITE = 'data/sprites/dog.png'
+HUSKY_SPRITES = 'data/sprites/husky_sprites.png'
 MENU_SELECT_SPRITE = 'data/sprites/menu_select_sprite.png'
 BALL_SPRITE = 'data/sprites/ball.png'
 
-
-
-
+#player movement variables
 GRAVITY = 0.5
 JUMP_HEIGHT = 16
 PLAYER_SPEED = 8

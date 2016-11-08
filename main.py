@@ -3,8 +3,9 @@ from Player import Player
 from Game import Game
 
 #create player and game objects
-player = Player()
+
 game = Game()
+player = Player()
 
 game.display_main_menu()
 while game.gameRunning:

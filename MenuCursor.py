@@ -7,7 +7,7 @@ class MenuCursor(pygame.sprite.Sprite):
 
         self.image = pygame.image.load('data/sprites/menu_select_sprite.png')
         self.rect = self.image.get_rect()
-        self.rect.x = 350
+        self.rect.x = 340
         self.rect.y = 259
         self.onPlay = True
         self.onQuit = False

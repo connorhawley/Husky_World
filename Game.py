@@ -2,7 +2,7 @@ from Player import Player
 from Platform import Platform
 from Camera import *
 from MenuCursor import MenuCursor
-from Ball import Ball
+from Enemy import Enemy
 
 from pytmx.util_pygame import load_pygame
 import pytmx
@@ -29,12 +29,14 @@ class Game:
 
 
     def new_game(self):
-        #reset game/start new game
-        self.sprites = pygame.sprite.Group()
-        self.ball_list = pygame.sprite.Group()
+        #reset game/start new game]
         self.player = Player()
+        self.sprites = pygame.sprite.Group()
+        self.player.ball_list = pygame.sprite.Group()
         self.sprites.add(self.player)
         self.platformlist = pygame.sprite.Group()
+        self.enemy_list = pygame.sprite.Group()
+        self.enemy_list.add(Enemy(100, 100))
         self.platforms = []
         x = y = 0
         level = [
@@ -88,20 +90,15 @@ class Game:
                     self.playing = False
                 self.gameRunning = False
             if pygame.key.get_pressed()[K_ESCAPE]:
-                print('pausing')
+                #print('pausing')
                 self.pause()
-            if pygame.key.get_pressed()[K_SPACE]:
-                ball = Ball()
-                self.ball_list.add(ball)
-                ball.rect.x = self.player.rect.right
-                ball.rect.y = self.player.rect.centery
-
 
     def update(self):
         #update sprite and platform lists
         self.sprites.update()
         self.platformlist.update()
-        self.ball_list.update()
+        self.player.ball_list.update()
+        self.enemy_list.update()
 
 
     def draw(self):
@@ -117,11 +114,14 @@ class Game:
             self.screen.blit(sprite.image, camera.apply(sprite))
         for platform in self.platformlist:
             self.screen.blit(platform.image, camera.apply(platform))
-        for ball in self.ball_list:
+        for ball in self.player.ball_list:
             self.screen.blit(ball.image, camera.apply(ball))
             self.block_hit_list = pygame.sprite.spritecollide(ball, self.platformlist, False)
             for block in self.block_hit_list:
-                self.ball_list.remove(ball)
+                self.player.ball_list.remove(ball)
+        for enemy in self.enemy_list:
+            self.screen.blit(enemy.image, camera.apply(enemy))
+
 
         pygame.display.flip()
 
@@ -136,8 +136,8 @@ class Game:
             #set background to white
             self.screen.fill(WHITE)
             #draw play and quit text to the screen
-            self.print_msg_to_screen('Play', RED, 'large', 0, -100)
-            self.print_msg_to_screen('Quit', RED, 'large', 0, 100)
+            self.print_msg_to_screen('Play', NAVY_BLUE, 'large', 0, -100)
+            self.print_msg_to_screen('Quit', NAVY_BLUE, 'large', 0, 100)
             #draw menu arrow cursor on the screen
             mainMenuCursor.draw(self.screen)
             self.keypressed = pygame.key.get_pressed()
@@ -150,14 +150,12 @@ class Game:
                         main_menu_open = False
                     elif self.keypressed[K_DOWN]:
                         mainMenuCursor.moveToQuit()
-                        self.screen.blit(mainMenuCursor.image, (350, 459))
-                    #459 is the center y coordinate of the Play text
+                    #459 is the center y coordinate of the quit text
                 if mainMenuCursor.rect.y == 459:
                     if self.keypressed[K_RETURN]:
                         pygame.quit()
                     elif self.keypressed[K_UP]:
                         mainMenuCursor.moveToPlay()
-                        self.screen.blit(mainMenuCursor.image, (350, 259))
 
             pygame.display.update()
 
@@ -170,7 +168,7 @@ class Game:
     def pause(self):
         #pause the game when escape key is pressed
         self.paused = True
-        self.print_msg_to_screen('Paused, press Q to quit', BLACK, 'large')
+        self.print_msg_to_screen('Paused, press Q to quit', BLACK, 'medium')
         pygame.display.update()
         while self.paused:
             for event in pygame.event.get():
