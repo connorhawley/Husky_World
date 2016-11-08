@@ -23,47 +23,50 @@ class Player(pygame.sprite.Sprite):
         self.ball_list = []
         self.last_time = pygame.time.get_ticks() #get time in milliseconds
 
-    def jump(self):
-        self.shoot()
 
     def handle_input(self, platforms):
         key = pygame.key.get_pressed()
 
-        if key[pygame.K_UP]:
+        if key[pygame.K_w]:
             if self.onGround:
                 self.dy -= JUMP_HEIGHT
+            if key[pygame.K_a]:
+                self.move_left()
+            if key[pygame.K_d]:
+                self.move_right()
 
-
-        if key[pygame.K_DOWN]:
+        if key[pygame.K_s]:
             pass
 
-        if key[pygame.K_LEFT]:
-            self.dx = -PLAYER_SPEED
-            self.walkingRight = False
-            self.walkingLeft = True
+        if key[pygame.K_a]:
+            self.move_left()
+            # if key[pygame.K_d]:
+            #     self.move_right()
 
-        if key[pygame.K_RIGHT]:
-            self.dx = PLAYER_SPEED
-            self.walkingLeft = False
-            self.walkingRight = True
+        if key[pygame.K_d]:
+            self.move_right()
+            # if key[pygame.K_a]:
+            #     self.move_left()
 
         if key[pygame.K_SPACE]:
-            self.shoot()
-            #currently not working when holding space and then left/up key pressed
+            if self.walkingLeft:
+                self.shoot('left')
+            if self.walkingRight:
+                self.shoot('right')
 
         if self.walkingLeft:    #if walking left, then animate the player sprite
             self.image = self.left_images[int(time.time() * self.image_framerate % self.image_count)] #limits animation framerate
-            if not key[pygame.K_LEFT]:  #if not pressing key then return to standing position sprite
+            if not key[pygame.K_a]:  #if not pressing key then return to standing position sprite
                 self.image = self.left_images[2]
 
         if self.walkingRight:   #if walking right, then animate the player sprite
             self.image = self.right_images[int(time.time() * self.image_framerate % self.image_count)] #limits animation framerate
-            if not key[pygame.K_RIGHT]: #if not pressing key then return to standing position sprite
+            if not key[pygame.K_d]: #if not pressing key then return to standing position sprite
                 self.image = self.right_images[2]
 
         if not self.onGround:   #if not on the ground then apply gravity
             self.dy += GRAVITY
-        if not(key[pygame.K_LEFT] or key[pygame.K_RIGHT]): #if not moving left or right, don't change x coordinate
+        if not(key[pygame.K_a] or key[pygame.K_d]): #if not moving left or right, don't change x coordinate
             self.dx = 0
 
         self.rect.left += self.dx
@@ -75,25 +78,30 @@ class Player(pygame.sprite.Sprite):
         self.collide(0, self.dy, platforms)
 
 
-    def shoot(self):
+    def shoot(self, direction):
         cooldown = 300  #shoot cooldown in milliseconds (how long before you can shoot again)
         current_time = pygame.time.get_ticks()#get current time in milliseconds
 
-        if self.walkingRight:
-            if current_time - self.last_time > cooldown: #if time passed is greater than cooldown
-                self.last_time = current_time            #then set last time to current time and allow new ball to be shot
-                ball = Ball('right')                    #create new ball that is going right
-                self.ball_list.add(ball)                #add ball to ball list (necessary in order to check collision and remove it)
+        if current_time - self.last_time > cooldown: #if time passed is greater than cooldown
+            self.last_time = current_time            #then set last time to current time and allow new ball to be shot
+            ball = Ball(direction)                    #create new ball that is going right
+            self.ball_list.add(ball)                #add ball to ball list (necessary in order to check collision and remove it)
+            if direction == 'left':
+                ball.rect.x = self.rect.left - 30       #spawn the ball on the left of the player if facing left
+            else:
                 ball.rect.x = self.rect.right           #spawn the ball at the top right of the player
-                ball.rect.y = self.rect.top
+            ball.rect.y = self.rect.top
 
-        if self.walkingLeft:
-            if current_time - self.last_time > cooldown:  #if time passed is greater than cooldown
-                self.last_time = current_time            #then set last time to current time and allow new ball to be shot
-                ball = Ball('left')                     #create new ball that is going left
-                self.ball_list.add(ball)                #add ball to ball list (necessary in order to check collision and remove it)
-                ball.rect.x = self.rect.left - 30       #spawn ball at top left of player (needs offset because rect is set to right image rect)
-                ball.rect.y = self.rect.top
+
+    def move_right(self):
+        self.dx = PLAYER_SPEED
+        self.walkingLeft = False
+        self.walkingRight = True
+
+    def move_left(self):
+        self.dx = -PLAYER_SPEED
+        self.walkingRight = False
+        self.walkingLeft = True
 
 
     def collide(self, dx, dy, platforms):

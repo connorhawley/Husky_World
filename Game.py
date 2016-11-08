@@ -36,7 +36,7 @@ class Game:
         self.sprites.add(self.player)
         self.platformlist = pygame.sprite.Group()
         self.enemy_list = pygame.sprite.Group()
-        self.enemy_list.add(Enemy(100, 100))
+        self.enemy_list.add(Enemy(100, 200))
         self.platforms = []
         x = y = 0
         level = [
@@ -99,6 +99,8 @@ class Game:
         self.platformlist.update()
         self.player.ball_list.update()
         self.enemy_list.update()
+        for e in self.enemy_list:
+            e.move(self.platformlist, self.player)
 
 
     def draw(self):
@@ -110,17 +112,23 @@ class Game:
         #create camera that is centered around the player
         #camera = Camera(simple_camera, self.total_level_width, self.total_level_height)
         camera.update(self.player)
-        for sprite in self.sprites:
-            self.screen.blit(sprite.image, camera.apply(sprite))
+
+
+        #draw all the sprites/images to screen
         for platform in self.platformlist:
             self.screen.blit(platform.image, camera.apply(platform))
+        for sprite in self.sprites:
+            self.screen.blit(sprite.image, camera.apply(sprite))
+            #self.enemy_hit_list = pygame.sprite.spritecollide(sprite, self.enemy_list, False)
+            #for enemy in self.enemy_hit_list:
+                #what happens when player touches enemy?
+        for enemy in self.enemy_list:
+            self.screen.blit(enemy.image, camera.apply(enemy))
         for ball in self.player.ball_list:
             self.screen.blit(ball.image, camera.apply(ball))
             self.block_hit_list = pygame.sprite.spritecollide(ball, self.platformlist, False)
             for block in self.block_hit_list:
                 self.player.ball_list.remove(ball)
-        for enemy in self.enemy_list:
-            self.screen.blit(enemy.image, camera.apply(enemy))
 
 
         pygame.display.flip()

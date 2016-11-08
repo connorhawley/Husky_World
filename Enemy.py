@@ -1,5 +1,5 @@
 from Game import *
-import random
+from pygame.math import Vector2
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -13,11 +13,17 @@ class Enemy(pygame.sprite.Sprite):
         self.dx = 0
         self.dy = 0
 
-    def move(self, platforms):
-        self.rect.x += random.random()
+    def move(self, platforms, player):
+
+        #self.dx = 5
         if not self.onGround:
             self.dy += GRAVITY
-        self.collide(0, self.y, platforms)
+        self.rect.left += self.dx
+        self.collide(self.rect.x, 0, platforms)
+        self.rect.top += self.dy
+        self.onGround = False
+        self.collide(0, self.rect.y, platforms)
+
 
     def collide(self, dx, dy, platforms):
         for platform in platforms:
