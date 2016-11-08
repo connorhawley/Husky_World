@@ -49,6 +49,7 @@ class Player(pygame.sprite.Sprite):
 
         if key[pygame.K_SPACE]:
             self.shoot()
+            #currently not working when holding space and then left/up key pressed
 
         if self.walkingLeft:    #if walking left, then animate the player sprite
             self.image = self.left_images[int(time.time() * self.image_framerate % self.image_count)] #limits animation framerate
