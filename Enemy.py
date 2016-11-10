@@ -1,5 +1,4 @@
 from constants import *
-import Player
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y):

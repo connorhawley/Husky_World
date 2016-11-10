@@ -3,6 +3,8 @@ from Platform import Platform
 from Camera import *
 from MenuCursor import MenuCursor
 from Enemy import Enemy
+from Level01 import Level01
+from Level02 import Level02
 
 from pytmx.util_pygame import load_pygame
 import pytmx
@@ -31,54 +33,15 @@ class Game:
     def new_game(self):
         #reset game/start new game]
         self.player = Player()
-        self.sprites = pygame.sprite.Group()
+        self.player_list = pygame.sprite.Group()
         self.player.ball_list = pygame.sprite.Group()
-        self.sprites.add(self.player)
-        self.platformlist = pygame.sprite.Group()
+        self.player_list.add(self.player)
+        self.platform_list = pygame.sprite.Group()
         self.enemy_list = pygame.sprite.Group()
-        self.enemy_list.add(Enemy(1000, 100))
+       #self.enemy_list.add(Enemy(1000, 100))
         self.platforms = []
-        x = y = 0
-        level = [
-            "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-            "P                                          P",
-            "P                                          P",
-            "P                                          P",
-            "P                                          P",
-            "P                                          P",
-            "P                                          P",
-            "P         PPPPPPPPPPP                      P",
-            "P                                          P",
-            "P                                          P",
-            "P                          PPPPPPP         P",
-            "P                 PPPPPP                   P",
-            "P                                          P",
-            "P      PPPPPPPPPP                          P",
-            "P                                          P",
-            "P                     PPPPPP               P",
-            "P                                          P",
-            "P   PPPPPPPPPPP                            P",
-            "P                                          P",
-            "P                 PPPPPPPPPPP              P",
-            "P                                          P",
-            "P                                          P",
-            "P                                          P",
-            "P        P                                 P",
-            "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ]
-        # build the level
-        for row in level:
-            for col in row:
-                if col == "P":
-                    p = Platform(x, y)
-                    self.platforms.append(p)
-                    self.platformlist.add(p)
-                x += 32
-            y += 32
-            x = 0
-
-        self.total_level_width = len(level[0])*32
-        self.total_level_height = len(level)*32
-
+        self.levels = [Level01, Level02] #list of levels
+        self.build_level(self.levels[0])            #starting level
         self.run_game_loop()
 
     def handle_events(self):
@@ -95,12 +58,30 @@ class Game:
 
     def update(self):
         #update sprite and platform lists
-        self.sprites.update()
-        self.platformlist.update()
+        self.player_list.update()
+        self.platform_list.update()
         self.player.ball_list.update()
         self.enemy_list.update()
         for e in self.enemy_list:
-            e.move(self.platformlist, self.player)
+            e.move(self.platform_list, self.player)
+
+
+    def build_level(self, Level):
+        # build the level
+        self.enemy_list.add(Level().enemies)
+        x = y = 0
+        for row in Level().level:
+            for col in row:
+                if col == "P":
+                    p = Platform(x, y)
+                    self.platforms.append(p)
+                    self.platform_list.add(p)
+                x += 32
+            y += 32
+            x = 0
+
+        self.total_level_width = len(Level().level[0]) * 32
+        self.total_level_height = len(Level().level) * 32
 
 
 
@@ -116,14 +97,14 @@ class Game:
 
 
         #draw all the sprites/images to screen and apply camera to them
-        for platform in self.platformlist:
+        for platform in self.platform_list:
             self.screen.blit(platform.image, camera.apply(platform))
-        for sprite in self.sprites:
+        for sprite in self.player_list:
             self.screen.blit(sprite.image, camera.apply(sprite))
         for enemy in self.enemy_list:
             self.screen.blit(enemy.image, camera.apply(enemy))
             #if any enemy hits the player then restart the game
-            if pygame.sprite.spritecollideany(enemy, self.sprites):
+            if pygame.sprite.spritecollideany(enemy, self.player_list):
                 self.new_game()
         # display death msg, save score, move back to start position
 
@@ -131,7 +112,7 @@ class Game:
         #if ball hits platform, delete ball. if hits enenmy, delete enemy & platform
         for ball in self.player.ball_list:
             self.screen.blit(ball.image, camera.apply(ball))
-            self.block_hit_list = pygame.sprite.spritecollide(ball, self.platformlist, False)
+            self.block_hit_list = pygame.sprite.spritecollide(ball, self.platform_list, False)
             self.enemy_ball_hit_list = pygame.sprite.groupcollide(self.player.ball_list, self.enemy_list, True, True)
             for block in self.block_hit_list:
                 self.player.ball_list.remove(ball)
