@@ -12,6 +12,8 @@ class Player(pygame.sprite.Sprite):
         self.right_images = self.create_sprite_sheet((72,48), 'data/sprites/husky_sprites.png', (0,48))
         self.right_images.reverse()
         self.rect = self.right_images[0].get_rect()
+        self.rect.x = 50
+        self.rect.y = 50
         self.image = self.right_images[2]
         self.onGround = False
         self.walkingLeft = False
