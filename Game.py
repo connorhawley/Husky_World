@@ -1,13 +1,12 @@
-from Player import Player
-from Platform import Platform
+
+
 from Camera import *
 from MenuCursor import MenuCursor
-from Enemy import Enemy
-from Level01 import Level01
-from Level02 import Level02
+from Platform import Platform
+from Player import Player
+from data.levels.Level01 import Level01
+from data.levels.Level02 import Level02
 
-from pytmx.util_pygame import load_pygame
-import pytmx
 
 class Game:
     def __init__(self):
