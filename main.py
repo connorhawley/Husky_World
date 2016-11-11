@@ -12,3 +12,4 @@ while game.gameRunning:
 
     game.new_game()
     pygame.display.update()
+

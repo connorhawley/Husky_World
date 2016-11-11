@@ -1,6 +1,6 @@
 from Camera import *
 from MenuCursor import MenuCursor
-from Platform import Platform
+from Platform import Platform, Structure
 from Player import Player
 from ExitBlock import ExitBlock
 from data.levels.Level00 import Level00
@@ -84,6 +84,10 @@ class Game:
                     p = Platform(x, y)
                     self.platforms.append(p)
                     self.platform_list.add(p)
+                if col == "S":
+                    s = Structure(x, y)
+                    self.platforms.append(s)
+                    self.platform_list.add(s)
                 if col == "E":
                     e = ExitBlock(x, y)
                     self.exitblocks.add(e)
