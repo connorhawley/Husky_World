@@ -1,4 +1,3 @@
-
 from Camera import *
 from MenuCursor import MenuCursor
 from Platform import Platform
@@ -88,19 +87,18 @@ class Game:
                 if col == "E":
                     e = ExitBlock(x, y)
                     self.exitblocks.add(e)
-                x += 32
-            y += 32
+                x += PLATFORM_WIDTH
+            y += PLATFORM_HEIGHT
             x = 0
 
-        self.total_level_width = len(Level().level[0]) * 32
-        self.total_level_height = len(Level().level) * 32
+        self.total_level_width = len(Level().level[0]) * PLATFORM_WIDTH
+        self.total_level_height = len(Level().level) * PLATFORM_HEIGHT
 
 
 
     def draw(self):
         #set background to white
         self.screen.fill(WHITE)
-        #self.render_tiles_to_screen('data/test.tmx')
         #create camera that stops scrolling when you reach edges
         camera = Camera(complex_camera, self.total_level_width, self.total_level_height)
         #create camera that is centered around the player
@@ -117,6 +115,7 @@ class Game:
             #if any enemy hits the player then restart the game
             if pygame.sprite.spritecollideany(enemy, self.player_list):
                 self.new_game()
+                #could also just make it restart current level.
         for exitblock in self.exitblocks:
             self.screen.blit(exitblock.image, camera.apply(exitblock))
             if exitblock.rect.colliderect(self.player.rect):
@@ -189,7 +188,6 @@ class Game:
                 if pygame.key.get_pressed()[pygame.K_ESCAPE]:
                     #print('unpausing')
                     self.paused = False
-
        #self.fpsClock.tick(3)
 
 

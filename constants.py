@@ -32,6 +32,9 @@ HUSKY_SPRITES = 'data/sprites/husky_sprites.png'
 MENU_SELECT_SPRITE = 'data/sprites/menu_select_sprite.png'
 BALL_SPRITE = 'data/sprites/ball.png'
 
+PLATFORM_WIDTH = 32
+PLATFORM_HEIGHT = 32
+
 #player movement variables
 GRAVITY = 0.5
 JUMP_HEIGHT = 16
