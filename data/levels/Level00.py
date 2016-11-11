@@ -30,7 +30,15 @@ class Level00(Level):
             "P                                          P",
             "P                                          P",
             "P                                          P",
+<<<<<<< HEAD
             "P        JPJ       J                       P",
+=======
+<<<<<<< HEAD
+            "P        JPJ                               P",
+=======
+            "P        JPJ       J                       P",
+>>>>>>> refs/remotes/origin/Updated_Level
+>>>>>>> master
             "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
 
 

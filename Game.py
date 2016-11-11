@@ -97,10 +97,19 @@ class Game:
                 if col == "J":
                     j = JumpBlock(x, y)
                     self.jump_blocks_list.add(j)
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
                 if col == "S":
                     s = Structure(x, y)
                     self.platforms.append(s)
                     self.platform_list.add(s)
+<<<<<<< HEAD
+=======
+>>>>>>> refs/remotes/origin/Updated_Level
+>>>>>>> master
                 x += PLATFORM_WIDTH
             y += PLATFORM_HEIGHT
             x = 0
