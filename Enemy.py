@@ -11,7 +11,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.y = y
         self.dx = 0
         self.dy = 0
-        self.direction = 'right'
+        self.direction = 'left'
 
     def move(self, platforms, player):
 
@@ -50,6 +50,10 @@ class Enemy(pygame.sprite.Sprite):
                     self.rect.top = platform.rect.bottom
                     self.dy += 2
 
+
+    def jump(self):
+        if self.onGround:
+            self.dy -= 12
 
     def draw(self, surface):
         surface.blit(self.image, (self.rect.x, self.rect.y))

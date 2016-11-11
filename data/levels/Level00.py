@@ -30,7 +30,7 @@ class Level00(Level):
             "P                                          P",
             "P                                          P",
             "P                                          P",
-            "P        P                                 P",
+            "P        JPJ                               P",
             "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
 
 
