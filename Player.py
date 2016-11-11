@@ -31,10 +31,6 @@ class Player(pygame.sprite.Sprite):
 
         if key[pygame.K_w]:
             if self.onGround:
-<<<<<<< HEAD
-                self.dy -= 20
-        if key[pygame.K_DOWN]:
-=======
                 self.dy -= JUMP_HEIGHT
             if key[pygame.K_a]:
                 self.move_left()
@@ -42,7 +38,6 @@ class Player(pygame.sprite.Sprite):
                 self.move_right()
 
         if key[pygame.K_s]:
->>>>>>> animated_sprite
             pass
 
         if key[pygame.K_a]:
