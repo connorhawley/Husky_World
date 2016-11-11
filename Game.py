@@ -1,8 +1,9 @@
 from Camera import *
 from MenuCursor import MenuCursor
-from Platform import Platform, Structure
+from Platform import *
 from Player import Player
 from ExitBlock import ExitBlock
+from JumpBlock import JumpBlock
 from data.levels.Level00 import Level00
 from data.levels.Level01 import Level01
 
@@ -17,6 +18,7 @@ class Game:
         self.fpsClock = pygame.time.Clock()
         self.gameRunning = True
 
+
     def run_game_loop(self):
         #The main game loop
         self.playing = True
@@ -26,18 +28,20 @@ class Game:
             self.update()
             self.draw()
             self.player.handle_input(self.platforms)
-
+            print(self.fpsClock.get_fps())
 
     def new_game(self):
         #reset game/start new game]
 
         self.player_list = pygame.sprite.Group()
-        self.platform_list = pygame.sprite.Group()
         self.enemy_list = pygame.sprite.Group()
-        self.exitblocks = pygame.sprite.Group()
+        self.platform_list = pygame.sprite.Group()
+        self.exit_blocks_list = pygame.sprite.Group()
+        self.jump_blocks_list = pygame.sprite.Group()
         self.platforms = []
+        self.current_level = 0
         self.levels = [Level00, Level01] #list of levels
-        self.build_level(self.levels[0])  #starting level
+        self.build_level(self.levels[self.current_level])  #starting level
         self.run_game_loop()
 
 
@@ -60,6 +64,8 @@ class Game:
         self.platform_list.update()
         self.player.ball_list.update()
         self.enemy_list.update()
+        self.exit_blocks_list.update()
+        self.jump_blocks_list.update()
         for e in self.enemy_list:
             e.move(self.platform_list, self.player)
 
@@ -73,7 +79,8 @@ class Game:
         self.player.ball_list = pygame.sprite.Group()
         self.player_list.add(self.player)
         self.platforms = []
-        self.exitblocks.empty()
+        self.jump_blocks_list.empty()
+        self.exit_blocks_list.empty()
         self.enemy_list.empty()
         self.platform_list.empty()
         self.enemy_list.add(Level().enemies)
@@ -84,13 +91,16 @@ class Game:
                     p = Platform(x, y)
                     self.platforms.append(p)
                     self.platform_list.add(p)
-                if col == "S":
-                    s = Structure(x, y)
-                    self.platforms.append(s)
-                    self.platform_list.add(s)
                 if col == "E":
                     e = ExitBlock(x, y)
-                    self.exitblocks.add(e)
+                    self.exit_blocks_list.add(e)
+                if col == "J":
+                    j = JumpBlock(x, y)
+                    self.jump_blocks_list.add(j)
+                if col == "S":
+                    s = Structure(x, y)
+                    self.platforms.append(p)
+                    self.platform_list.add(p)
                 x += PLATFORM_WIDTH
             y += PLATFORM_HEIGHT
             x = 0
@@ -119,11 +129,21 @@ class Game:
             #if any enemy hits the player then restart the game
             if pygame.sprite.spritecollideany(enemy, self.player_list):
                 self.new_game()
-                #could also just make it restart current level.
-        for exitblock in self.exitblocks:
+              #could also just make it restart current level.
+
+            #if enemy hits a jump block, then jump.
+            if pygame.sprite.spritecollideany(enemy, self.jump_blocks_list):
+                enemy.jump()
+
+        #draw exit blocks to the screen. If player hits the block then go to next level.
+        for exitblock in self.exit_blocks_list:
             self.screen.blit(exitblock.image, camera.apply(exitblock))
             if exitblock.rect.colliderect(self.player.rect):
-                self.build_level(self.levels[1])
+                self.current_level += 1
+                self.build_level(self.levels[self.current_level])
+        for jumpblock in self.jump_blocks_list:
+            self.screen.blit(jumpblock.image, camera.apply(jumpblock))
+
                 #go to next level if touch block?
         # display death msg, save score, move back to start position
 
@@ -142,6 +162,8 @@ class Game:
     def display_main_menu(self):
         #display main menu
         main_menu_open = True
+        at_menu_bottom = False
+        at_menu_top = True
         # create mouse cursor arrow
         mainMenuCursor = MenuCursor()
         selectedOption = 'play'
@@ -151,24 +173,39 @@ class Game:
             #draw play and quit text to the screen
             self.print_msg_to_screen('Play', NAVY_BLUE, 'large', 0, -100)
             self.print_msg_to_screen('Quit', NAVY_BLUE, 'large', 0, 100)
+            self.print_msg_to_screen('Test', NAVY_BLUE, 'large', 0, 300)
             #draw menu arrow cursor on the screen
             mainMenuCursor.draw(self.screen)
             self.keypressed = pygame.key.get_pressed()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+
+                if self.keypressed[K_DOWN]:
+                    if at_menu_bottom:
+                        pass
+                    else:
+                        mainMenuCursor.moveDown()
+                elif self.keypressed[K_UP]:
+                    if at_menu_top:
+                        pass
+                    else:
+                        mainMenuCursor.moveUp()
                     #259 is the center y coordinate of the Play text
                 if mainMenuCursor.rect.y == 259:
+                    at_menu_top = True
                     if self.keypressed[K_RETURN]:
                         main_menu_open = False
-                    elif self.keypressed[K_DOWN]:
-                        mainMenuCursor.moveToQuit()
                     #459 is the center y coordinate of the quit text
                 if mainMenuCursor.rect.y == 459:
+                    at_menu_top = False
+                    at_menu_bottom = False
                     if self.keypressed[K_RETURN]:
                         pygame.quit()
-                    elif self.keypressed[K_UP]:
-                        mainMenuCursor.moveToPlay()
+                if mainMenuCursor.rect.y == 659:
+                    at_menu_top = False
+                    at_menu_bottom = True
+
 
             pygame.display.update()
 
