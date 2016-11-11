@@ -1,6 +1,6 @@
 from Camera import *
 from MenuCursor import MenuCursor
-from Platform import Platform
+from Platform import *
 from Player import Player
 from ExitBlock import ExitBlock
 from JumpBlock import JumpBlock
@@ -97,6 +97,13 @@ class Game:
                 if col == "J":
                     j = JumpBlock(x, y)
                     self.jump_blocks_list.add(j)
+<<<<<<< HEAD
+=======
+                if col == "S":
+                    s = Structure(x, y)
+                    self.platforms.append(s)
+                    self.platform_list.add(s)
+>>>>>>> refs/remotes/origin/Updated_Level
                 x += PLATFORM_WIDTH
             y += PLATFORM_HEIGHT
             x = 0
