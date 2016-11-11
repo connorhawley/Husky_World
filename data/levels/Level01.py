@@ -1,4 +1,3 @@
-
 from Level import *
 from Enemy import Enemy
 
@@ -6,8 +5,8 @@ class Level01(Level):
     def __init__(self):
         super().__init__()
 
-        self.enemies.add(Enemy(100, 400))
-        self.enemies.add(Enemy(128, 200))
+        self.enemies.add(Enemy(400, 400))
+        self.enemies.add(Enemy(428, 200))
 
         self.level = [
             "                                                                                                  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                                                                                                                                                                                                                                                                                                            ",
@@ -38,5 +37,5 @@ class Level01(Level):
             "                                    SSS                                                                 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                    PPPPPP          PPPPPP                                                       PPPPPPPPPPPPPPPPPP                  SSSS                                                                  PP                         SSSSSSSSS                                   PPPPPP                                                                  ",
             "                                                                                                       PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                PPPPPPPPP          PPPPPPPPP                                                    PPPPPPPPPPPPPPPPPP                                                                                        PP                                                                  PPPPPPPPP                                                                  ",
             "                                                                                                      PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                PPPPPPPPP          PPPPPPPPP                                                    PPPPPPPPPPPPPPPPPPPPP                                                                                     PP                                                                  PPPPPPPPP                                                                  ",
-            "                                                                                                    PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP               PPPPPPPPP          PPPPPPPPP                                                    PPPPPPPPPPPPPPPPPPPPP                                                                                     PP                                                                  PPPPPPPPP                                                                  ",
+            "P                               J                                                                    PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP               PPPPPPPPP          PPPPPPPPP                                                    PPPPPPPPPPPPPPPPPPPPP                                                                                     PP                                                                  PPPPPPPPP                                                                  ",
             "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPEEEEEEEEEEPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", ]

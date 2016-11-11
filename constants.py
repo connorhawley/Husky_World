@@ -3,8 +3,7 @@ import pygame
 #This file contains constants (colors, paths, etc)
 
 #Window size
-WINDOW_HEIGHT = 650
-
+WINDOW_HEIGHT = 768
 WINDOW_WIDTH = 1024
 HALF_WINDOW_WIDTH = WINDOW_WIDTH/2
 HALF_WINDOW_HEIGHT = WINDOW_HEIGHT/2

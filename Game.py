@@ -28,7 +28,7 @@ class Game:
             self.update()
             self.draw()
             self.player.handle_input(self.platforms)
-            print(self.fpsClock.get_fps())
+
 
     def new_game(self):
         #reset game/start new game]
@@ -99,8 +99,8 @@ class Game:
                     self.jump_blocks_list.add(j)
                 if col == "S":
                     s = Structure(x, y)
-                    self.platforms.append(p)
-                    self.platform_list.add(p)
+                    self.platforms.append(s)
+                    self.platform_list.add(s)
                 x += PLATFORM_WIDTH
             y += PLATFORM_HEIGHT
             x = 0

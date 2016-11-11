@@ -3,8 +3,8 @@ from Enemy import Enemy
 class Level00(Level):
     def __init__(self):
         super().__init__()
-        self.enemies.add(Enemy(100, 250))
-        self.enemies.add(Enemy(200,300))
+        self.enemies.add(Enemy(100, 550))
+        self.enemies.add(Enemy(200, 700))
 
         self.level = [
             "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -30,8 +30,7 @@ class Level00(Level):
             "P                                          P",
             "P                                          P",
             "P                                          P",
-            "P        P                                 P",
+            "P        JPJ       J                       P",
             "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
-
 
 
