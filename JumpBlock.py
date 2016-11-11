@@ -1,13 +1,15 @@
-from constants import *
 from pygame import *
+from constants import *
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
 
-class Platform(pygame.sprite.Sprite):
+class JumpBlock(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load('data/sprites/tile32.png')
+        self.image = pygame.Surface([32,32])
+        self.image.fill(BLUE)
+        self.image.set_alpha(100)
         self.image.convert()
-        self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
+        self.rect = Rect(x, y, 32, 32)
