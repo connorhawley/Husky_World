@@ -1,11 +1,11 @@
 
-
 from Camera import *
 from MenuCursor import MenuCursor
 from Platform import Platform
 from Player import Player
+from ExitBlock import ExitBlock
+from data.levels.Level00 import Level00
 from data.levels.Level01 import Level01
-from data.levels.Level02 import Level02
 
 
 class Game:
@@ -31,17 +31,17 @@ class Game:
 
     def new_game(self):
         #reset game/start new game]
-        self.player = Player()
+
         self.player_list = pygame.sprite.Group()
-        self.player.ball_list = pygame.sprite.Group()
-        self.player_list.add(self.player)
         self.platform_list = pygame.sprite.Group()
         self.enemy_list = pygame.sprite.Group()
-       #self.enemy_list.add(Enemy(1000, 100))
+        self.exitblocks = pygame.sprite.Group()
         self.platforms = []
-        self.levels = [Level01, Level02] #list of levels
-        self.build_level(self.levels[0])            #starting level
+        self.levels = [Level00, Level01] #list of levels
+        self.build_level(self.levels[0])  #starting level
         self.run_game_loop()
+
+
 
     def handle_events(self):
         # handle game events
@@ -65,8 +65,18 @@ class Game:
             e.move(self.platform_list, self.player)
 
 
+
     def build_level(self, Level):
         # build the level
+
+        self.player_list.empty()
+        self.player = Player()
+        self.player.ball_list = pygame.sprite.Group()
+        self.player_list.add(self.player)
+        self.platforms = []
+        self.exitblocks.empty()
+        self.enemy_list.empty()
+        self.platform_list.empty()
         self.enemy_list.add(Level().enemies)
         x = y = 0
         for row in Level().level:
@@ -75,6 +85,9 @@ class Game:
                     p = Platform(x, y)
                     self.platforms.append(p)
                     self.platform_list.add(p)
+                if col == "E":
+                    e = ExitBlock(x, y)
+                    self.exitblocks.add(e)
                 x += 32
             y += 32
             x = 0
@@ -94,7 +107,6 @@ class Game:
         #camera = Camera(simple_camera, self.total_level_width, self.total_level_height)
         camera.update(self.player)
 
-
         #draw all the sprites/images to screen and apply camera to them
         for platform in self.platform_list:
             self.screen.blit(platform.image, camera.apply(platform))
@@ -105,6 +117,11 @@ class Game:
             #if any enemy hits the player then restart the game
             if pygame.sprite.spritecollideany(enemy, self.player_list):
                 self.new_game()
+        for exitblock in self.exitblocks:
+            self.screen.blit(exitblock.image, camera.apply(exitblock))
+            if exitblock.rect.colliderect(self.player.rect):
+                self.build_level(self.levels[1])
+                #go to next level if touch block?
         # display death msg, save score, move back to start position
 
         #draw all basketballs to the screen and apply camera, and check for collison

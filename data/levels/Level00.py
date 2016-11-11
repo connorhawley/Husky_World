@@ -1,10 +1,10 @@
-from Level import Level
+from Level import *
 from Enemy import Enemy
-class Level02(Level):
+class Level00(Level):
     def __init__(self):
         super().__init__()
-        self.enemies.add(Enemy(100, 400))
-        self.enemies.add(Enemy(64, 64))
+        self.enemies.add(Enemy(100, 250))
+        self.enemies.add(Enemy(200,300))
 
         self.level = [
             "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -20,17 +20,18 @@ class Level02(Level):
             "P                          PPPPPPP         P",
             "P                 PPPPPP                   P",
             "P                                          P",
+            "P      PPPPPPPPPP                          P",
             "P                                          P",
+            "P                     PPPPPP               P",
             "P                                          P",
-            "P                                          P",
-            "P                                          P",
-            "P                                          P",
-            "P                                          P",
-            "P                                          P",
+            "P   PPPPPPPPPPP                            P",
+            "P                           E              P",
+            "P                 PPPPPPPPPPP              P",
             "P                                          P",
             "P                                          P",
             "P                                          P",
             "P        P                                 P",
-            "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", ]
+            "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
+
 
 
