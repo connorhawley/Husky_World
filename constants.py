@@ -37,5 +37,5 @@ PLATFORM_HEIGHT = 32
 
 #player movement variables
 GRAVITY = 0.5
-JUMP_HEIGHT = 16
+JUMP_HEIGHT = 13
 PLAYER_SPEED = 8

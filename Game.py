@@ -2,10 +2,10 @@ from Camera import *
 from MenuCursor import MenuCursor
 from Platform import *
 from Player import Player
-from ExitBlock import ExitBlock
-from JumpBlock import JumpBlock
 from data.levels.Level00 import Level00
 from data.levels.Level01 import Level01
+import threading
+from math import *
 
 
 class Game:
@@ -18,6 +18,9 @@ class Game:
         self.fpsClock = pygame.time.Clock()
         self.gameRunning = True
 
+    def printfps(self):
+        threading.Timer(1.0, self.printfps).start()
+        print("FPS: ", floor(self.fpsClock.get_fps()))
 
     def run_game_loop(self):
         #The main game loop
@@ -30,20 +33,23 @@ class Game:
             self.player.handle_input(self.platforms)
 
 
+
+
     def new_game(self):
         #reset game/start new game]
-
         self.player_list = pygame.sprite.Group()
         self.enemy_list = pygame.sprite.Group()
         self.platform_list = pygame.sprite.Group()
+        self.enemy_platform_list = pygame.sprite.Group()
         self.exit_blocks_list = pygame.sprite.Group()
         self.jump_blocks_list = pygame.sprite.Group()
+        self.kill_blocks_list = pygame.sprite.Group()
         self.platforms = []
         self.current_level = 0
         self.levels = [Level00, Level01] #list of levels
         self.build_level(self.levels[self.current_level])  #starting level
+        self.printfps()
         self.run_game_loop()
-
 
 
     def handle_events(self):
@@ -55,25 +61,39 @@ class Game:
                     self.playing = False
                 self.gameRunning = False
             if pygame.key.get_pressed()[K_ESCAPE]:
-                #print('pausing')
                 self.pause()
+
+            #for testing purposes, pressing K/L goes to previous or next level
+            if pygame.key.get_pressed()[K_k]:
+                if self.current_level-1 < 0:
+                    print("There is no previous level to go to")
+                else:
+                    self.build_level(self.levels[self.current_level-1])
+                    self.current_level -= 1
+
+            if pygame.key.get_pressed()[K_l]:
+                if self.current_level+1 >= len(self.levels):
+                    print("There is no next level to go to")
+                else:
+                    self.build_level(self.levels[self.current_level+1])
+                    self.current_level += 1
 
     def update(self):
         #update sprite and platform lists
         self.player_list.update()
-        self.platform_list.update()
         self.player.ball_list.update()
         self.enemy_list.update()
-        self.exit_blocks_list.update()
-        self.jump_blocks_list.update()
+       #self.exit_blocks_list.update()
+       #self.jump_blocks_list.update()
+       #self.kill_blocks_list.update()
         for e in self.enemy_list:
-            e.move(self.platform_list, self.player)
+            e.move(self.enemy_platform_list, self.player)
 
+        #print(self.player.rect.x, self.player.rect.y)
 
 
     def build_level(self, Level):
         # build the level
-
         self.player_list.empty()
         self.player = Player()
         self.player.ball_list = pygame.sprite.Group()
@@ -83,6 +103,7 @@ class Game:
         self.exit_blocks_list.empty()
         self.enemy_list.empty()
         self.platform_list.empty()
+        self.enemy_platform_list.empty()
         self.enemy_list.add(Level().enemies)
         x = y = 0
         for row in Level().level:
@@ -91,6 +112,7 @@ class Game:
                     p = Platform(x, y)
                     self.platforms.append(p)
                     self.platform_list.add(p)
+                    self.enemy_platform_list.add(p)
                 if col == "E":
                     e = ExitBlock(x, y)
                     self.exit_blocks_list.add(e)
@@ -101,13 +123,18 @@ class Game:
                     s = Structure(x, y)
                     self.platforms.append(s)
                     self.platform_list.add(s)
+                if col == "K":
+                    k = KillBlock(x, y)
+                    self.kill_blocks_list.add(k)
+                if col == "I":
+                    i = InvisibleBlock(x, y)
+                    self.enemy_platform_list.add(i)
                 x += PLATFORM_WIDTH
             y += PLATFORM_HEIGHT
             x = 0
 
         self.total_level_width = len(Level().level[0]) * PLATFORM_WIDTH
         self.total_level_height = len(Level().level) * PLATFORM_HEIGHT
-
 
 
     def draw(self):
@@ -122,15 +149,19 @@ class Game:
         #draw all the sprites/images to screen and apply camera to them
         for platform in self.platform_list:
             self.screen.blit(platform.image, camera.apply(platform))
-        for sprite in self.player_list:
-            self.screen.blit(sprite.image, camera.apply(sprite))
+
+        for player in self.player_list:
+            self.screen.blit(player.image, camera.apply(player))
+
         for enemy in self.enemy_list:
             self.screen.blit(enemy.image, camera.apply(enemy))
             #if any enemy hits the player then restart the game
             if pygame.sprite.spritecollideany(enemy, self.player_list):
-                self.new_game()
-              #could also just make it restart current level.
 
+                #kill enemy if player lands on top of it?
+
+                self.build_level(self.levels[self.current_level])
+              #could also just make it restart current level.
             #if enemy hits a jump block, then jump.
             if pygame.sprite.spritecollideany(enemy, self.jump_blocks_list):
                 enemy.jump()
@@ -141,11 +172,19 @@ class Game:
             if exitblock.rect.colliderect(self.player.rect):
                 self.current_level += 1
                 self.build_level(self.levels[self.current_level])
+
+        #dont need to draw jumpblocks
         for jumpblock in self.jump_blocks_list:
             self.screen.blit(jumpblock.image, camera.apply(jumpblock))
+        for killblock in self.kill_blocks_list:
+            self.screen.blit(killblock.image, camera.apply(killblock))
+            if killblock.rect.colliderect(self.player.rect):
+                self.build_level(self.levels[self.current_level])
 
-                #go to next level if touch block?
-        # display death msg, save score, move back to start position
+
+
+        #go to next level if touch block?
+        #display death msg, save score, move back to start position
 
         #draw all basketballs to the screen and apply camera, and check for collison
         #if ball hits platform, delete ball. if hits enenmy, delete enemy & platform

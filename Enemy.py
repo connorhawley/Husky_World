@@ -53,7 +53,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def jump(self):
         if self.onGround:
-            self.dy -= 12
+            self.dy -= 10
 
     def draw(self, surface):
         surface.blit(self.image, (self.rect.x, self.rect.y))
