@@ -4,6 +4,8 @@ from Platform import *
 from Player import Player
 from data.levels.Level00 import Level00
 from data.levels.Level01 import Level01
+from data.levels.Level02 import Level02
+
 import threading
 from math import *
 
@@ -33,8 +35,6 @@ class Game:
             self.player.handle_input(self.platforms)
 
 
-
-
     def new_game(self):
         #reset game/start new game]
         self.player_list = pygame.sprite.Group()
@@ -46,7 +46,7 @@ class Game:
         self.kill_blocks_list = pygame.sprite.Group()
         self.platforms = []
         self.current_level = 0
-        self.levels = [Level00, Level01] #list of levels
+        self.levels = [Level00, Level01, Level02] #list of levels
         self.build_level(self.levels[self.current_level])  #starting level
         self.printfps()
         self.run_game_loop()
@@ -87,7 +87,7 @@ class Game:
        #self.jump_blocks_list.update()
        #self.kill_blocks_list.update()
         for e in self.enemy_list:
-            e.move(self.enemy_platform_list, self.player)
+            e.move(self.enemy_platform_list)
 
         #print(self.player.rect.x, self.player.rect.y)
 
@@ -129,6 +129,11 @@ class Game:
                 if col == "I":
                     i = InvisibleBlock(x, y)
                     self.enemy_platform_list.add(i)
+                if col == "B":
+                    b = Brick(x, y)
+                    self.platforms.append(b)
+                    self.platform_list.add(b)
+                    self.enemy_platform_list.add(b)
                 x += PLATFORM_WIDTH
             y += PLATFORM_HEIGHT
             x = 0

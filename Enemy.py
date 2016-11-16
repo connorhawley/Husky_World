@@ -5,6 +5,7 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface([32,32])
         self.image.fill(RED)
+        self.image.convert_alpha()
         self.rect = self.image.get_rect()
         self.onGround = False
         self.rect.x = x
@@ -13,7 +14,7 @@ class Enemy(pygame.sprite.Sprite):
         self.dy = 0
         self.direction = 'left'
 
-    def move(self, platforms, player):
+    def move(self, platforms):
 
         if self.direction == 'left':
             self.dx = -3

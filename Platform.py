@@ -51,3 +51,10 @@ class InvisibleBlock(Entity):
         self.image.convert_alpha()
         self.image.set_alpha(100)
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
+
+class Brick(Entity):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = pygame.image.load('data/levels/Husky_World_Brick.png')
+        self.image.convert_alpha()
+        self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
