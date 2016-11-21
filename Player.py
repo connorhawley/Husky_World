@@ -4,17 +4,19 @@ import time
 
 class Player(pygame.sprite.Sprite):
     
-    def __init__(self):
+    def __init__(self, x, y):
         #call parent constructor
         super().__init__()
         #create player sprite images
+
         self.left_images = self.create_sprite_sheet((72,48), 'data/sprites/husky_sprites.png', (0,0))
         self.right_images = self.create_sprite_sheet((72,48), 'data/sprites/husky_sprites.png', (0,48))
+
         self.right_images.reverse()
         self.rect = self.right_images[0].get_rect()
-        self.rect.x = 100
-        self.rect.y = 500
-        self.image = self.right_images[2]
+        self.rect.x = x
+        self.rect.y = y
+        self.image = self.right_images[2].convert_alpha()
         self.onGround = False
         self.walkingLeft = False
         self.walkingRight = True
@@ -26,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.last_time = pygame.time.get_ticks() #get time in milliseconds
 
 
-    def handle_input(self, platforms):
+    def update(self, platforms):
         key = pygame.key.get_pressed()
 
         if key[pygame.K_w]:
@@ -42,13 +44,9 @@ class Player(pygame.sprite.Sprite):
 
         if key[pygame.K_a]:
             self.move_left()
-            # if key[pygame.K_d]:
-            #     self.move_right()
 
         if key[pygame.K_d]:
             self.move_right()
-            # if key[pygame.K_a]:
-            #     self.move_left()
 
         if key[pygame.K_SPACE]:
             if self.walkingLeft:
@@ -57,14 +55,14 @@ class Player(pygame.sprite.Sprite):
                 self.shoot('right')
 
         if self.walkingLeft:    #if walking left, then animate the player sprite
-            self.image = self.left_images[int(time.time() * self.image_framerate % self.image_count)] #limits animation framerate
+            self.image = self.left_images[int(time.time() * self.image_framerate % self.image_count)].convert_alpha() #limits animation framerate
             if not key[pygame.K_a]:  #if not pressing key then return to standing position sprite
-                self.image = self.left_images[2]
+                self.image = self.left_images[2].convert_alpha()
 
         if self.walkingRight:   #if walking right, then animate the player sprite
-            self.image = self.right_images[int(time.time() * self.image_framerate % self.image_count)] #limits animation framerate
+            self.image = self.right_images[int(time.time() * self.image_framerate % self.image_count)].convert_alpha() #limits animation framerate
             if not key[pygame.K_d]: #if not pressing key then return to standing position sprite
-                self.image = self.right_images[2]
+                self.image = self.right_images[2].convert_alpha()
 
         if not self.onGround:   #if not on the ground then apply gravity
             self.dy += GRAVITY
@@ -123,10 +121,6 @@ class Player(pygame.sprite.Sprite):
                 if dy < 0:
                     self.rect.top = platform.rect.bottom  #set top coordinate to bottom coordinate of platform
                     self.dy += 2
-
-    #draws player sprite to screen
-    def draw(self, surface):
-        surface.blit(self.image, (self.rect.x, self.rect.y))
 
 
     def create_sprite_sheet(self, size, file, initial_position):

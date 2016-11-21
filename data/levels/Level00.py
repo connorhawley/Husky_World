@@ -1,10 +1,15 @@
 from Level import *
 from Enemy import Enemy
+
 class Level00(Level):
     def __init__(self):
         super().__init__()
         self.enemies.add(Enemy(100, 550))
         self.enemies.add(Enemy(200, 700))
+        self.invincible_enemies.add(Enemy(300, 800, 'invincible'))
+        self.invincible_enemies.add(Enemy(0, 100, 'invincible'))
+
+        self.player = Player(320,448)
 
         self.level = [
             "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -14,23 +19,23 @@ class Level00(Level):
             "P                                          P",
             "P                                          P",
             "P                                          P",
-            "P         PPPPPPPPPPP                      P",
+            "P         RRRRRRRRRRR                      P",
             "P                                          P",
             "P                                          P",
-            "P                          PPPPPPP         P",
-            "P                 PPPPPP                   P",
+            "P                          RRRRRRR         P",
+            "P                 RRRRRR                   P",
             "P                                          P",
-            "P      PPPPPPPPPP                          P",
+            "P      RRRRRRRRRR                          P",
             "P                                          P",
             "P                     PPPPPP               P",
             "P                                          P",
-            "P   PPPPPPPPPPP                            P",
-            "P                           E              P",
-            "P                 PPPPPPPPPPP              P",
+            "P   RRRRRRRRRRR                            P",
+            "P                                          P",
+            "P                 RRRRRRRRRRR              P",
             "P                                          P",
             "P                                          P",
             "P                                          P",
-            "P        JPJ       J                       P",
-            "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
+            "R        JRJ       J                      ER",
+            "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",]
 
 

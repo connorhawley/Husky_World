@@ -1,9 +1,12 @@
-from Level import Level
+from Level import *
 
 class Level02(Level):
     def __init__(self):
         super().__init__()
-
+        self.player = Player(32, 912)
+        self.enemies.add(Enemy(736, 912))
+        self.enemies.add(Enemy(1200, 912))
+        self.enemies.add(Enemy(1644, 912))
 
 
         self.level = [
@@ -19,26 +22,26 @@ class Level02(Level):
 "                                                                                                                                                                                                        ",
 "                                                                                                                                                                                                        ",
 "                                                                                                                                                                                                        ",
-"                                                                                                                                                                                                        ",
-"                                                                                                                                                                                                        ",
-"                                                                                                                                                                                                        ",
-"                                                                                                                                                                                                        ",
-"                                                                                                                                                                                                        ",
-"                                                                                                                                                                                                        ",
-"                                                                                               SSSSSSSSS      SSSSS                                                                                     ",
-"                                                                                               SSSSSSSSS      SSSSS                                                                                     ",
+"P                                                                                                                                                                                                      P",
+"P                                                                                                                                                                                                      P",
+"P                                                                                                                                                                                                      P",
+"P                                                                                                                                                                                                      P",
+"P                                                                                                                                                                                                      P",
+"P                                                                                                                                                                                                      P",
+"P                                                                                               SSSSSSSSS      SSSSS                                                                                   P",
+"P                                                                                               SSSSSSSSS      SSSSS                                                                                   P",
 "P                                                                                    SSSS                                                                                                              P",
 "P                                                                                    SSS                                                                                           BB   BB             P",
 "P                    SSS     SSS     SSS     SSS                                 SSSSSS                                                                                             B   B              P",
 "P                    SSS     SSS     SSS     SSS                                 SSSSS                                SSSSS                                                         B   B              P",
 "P                    SSSKKKKKSSSKKKKKSSSKKKKKSSS                                                                      SSSSS                                                         B   B              P",
 "P                SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS                                                                                                                         SSS   B   B   SSS        P",
-"P                KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK                        PPPP                                             SSSS                                                  B   B              P",
+"P                UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU                        PPPP                                             SSSS                                                  B   B              P",
 "P                                                                            PPPP                                             SSSS                                      SSS         B   B        SSS   P",
 "P                                                                        PPPPPPPPPPPPPPP        PPPPPPP        PPPPP                                                                B   B              P",
-"P                                                                        PPPPPPPPPPPPPPP        PPPPPPP        PPPPP                                                                B   B              P",
-"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKKKKKKKKPPPPPPPKKKKKKKKPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP   PPPPPPPPPPPPPPPP",
-"PPPPPPPPPPPPP                                                                                                PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                       P",
+"R       J                   J              J             J               RPPPPPPPPPPPPPP        PPPPPPP        PPPPP                                                                B   B              P",
+"PRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPPPPPPPPPPPPPKKKKKKKKPPPPPPPKKKKKKKKPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP   PPPPPPPPPPPPPPPP",
+"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                       P",
 "PPPPPPPPPPPPP                                                                                                PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                       P",
 "PPPPPPPPPPPPP                                                                                                PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                       P",
 "PPPPPPPPPPPPP                                                                                                PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                       P",
@@ -56,8 +59,8 @@ class Level02(Level):
 "PPPPPPPPPPPPPSSSS                                                                                                                        PPPPPPP                                                       P",
 "PPPPPPPPPPPPP                                                                                                PPPPPP        PPPPPPP         PPPPP                                                       P",
 "PPPPPPPPPPPPP                                                                                               PPPPPPP        PPPPPPPPP         PPP                                                       P",
-"PPPPPPPPPPPPP                                                                                              PPPPPPPP        PPPPPPPPPP                                                                  P",
-"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                      PPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                                P",
+"PPPPPPPPPPPPP                                                                                              PPPPPPPP        RPPPPPPPPP                                                                  P",
+"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                      PPPPPPPPPRRRRRRRRPPPPPPPPPPPP                                                                P",
 "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP     PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                            SSSSS              P",
 "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP     PPPPPPPPPPPPPPPPPPPPPPPPPPPPP                  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                              P",
 "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP     PPPPPPPPPPPPPPPPPPPPPPPPPPPP                  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                SSSSSS                                      P",
@@ -68,7 +71,7 @@ class Level02(Level):
 "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                     B   B    PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                       P",
 "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                     B   B   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                                       P",
 "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKP",
-"P                                                                                                                                                                            PPPPPPPPPPPPPPPPPPPPPPPPPPP",
+"P                                                                                            PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
 "P                                                                                                                                                                            PPPPPPPPPPPPPPPPPPPPPPPPPPP",
 "P                                                                                                                                                                            PPPPPPPPPPPPPPPPPPPPPPPPPPP",
 "P                                                                                                                                                                            PPPPPPPPPPPPPPPPPPPPPPPPPPP",
@@ -98,7 +101,7 @@ class Level02(Level):
 "P        B   B                              PPPPPPPP                 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                     PP                                          S   P",
 "P        B   PPPPPPPPPPPPPPPPPPPPPKKKKKKKKKKPPPPPPPP                PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                    PP                                              P",
 "PPPPPPPPPP   PPPPPPPPPPPPPPPPPPPPPKKKKKKKKKKPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKKKKKPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-"PPP                 P                                                                                                                                                                                  P",
+"PPP                 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
 "PPPP               PP                                                                                                                                                                                  P",
 "PPPPP     SSS     PP                                                                                                                                                                                   P",
 "PPPPPP           PP                                                                                                                                                                                    P",
@@ -128,7 +131,7 @@ class Level02(Level):
 "P                P                                                                                                                             PPPPPPPPP     PPP     PPP     PPP     PPP         B   B P",
 "P                P                                                                                                              P              PPPPPPPPP     PPP     PPP     PPP     PPP         B   B P",
 "PPPPPPPPPPPPPPPPPPKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKPPPPPPPPPPPPPPPPPPPPPPPPKKKKKPPPKKKKKPPPKKKKKPPPKKKKKPPPKKKKKKKKKB   PPP",
-"P                                                                                                                                                                            PPP                       P",
+"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP     P",
 "P                                                                                                                                                                           PPP                        P",
 "P                                                                                                                                                                          PPP                         P",
 "P                                                                                                                                                                         PPP                          P",
@@ -141,7 +144,7 @@ class Level02(Level):
 "P                     SSSSSSSKKKKKSSSSSSS      SSSSS                                      SSSSS             PP                                                     PPP                                 P",
 "P                    SS     SSSSSSS                                             SSSSS                        PP                                                   PPP                                  P",
 "P                   SS                                   SSSSSS                                               PP                                                PPPP                                   P",
-"P                  SS                                                                                          PP                                              PPPP                                    P",
+"P                  SS                                                                                          PP                                        E     PPPP                                    P",
 "P        SSSSSSSSSSS                                                                                            PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                     P",
 "P                                                                                                                PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                      P",
 "P                                                                                                                    PPP         PPP         PPP         PPP                                           P",

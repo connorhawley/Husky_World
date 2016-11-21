@@ -5,7 +5,7 @@ from Game import Game
 #create player and game objects
 
 game = Game()
-player = Player()
+#player = Player()
 
 game.display_main_menu()
 while game.gameRunning:

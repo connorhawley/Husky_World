@@ -28,9 +28,21 @@ LARGEFONT = pygame.font.Font('data/fonts/uconn.ttf', 75)
 #Set FPS for game to run at
 FPS = 60
 #set path for sprites
+
 HUSKY_SPRITES = 'data/sprites/husky_sprites.png'
 MENU_SELECT_SPRITE = 'data/sprites/menu_select_sprite.png'
 BALL_SPRITE = 'data/sprites/ball.png'
+ENEMY_SPRITE = 'data/sprites/enemy.png'
+ENEMY_SPIKE_SPRITE = 'data/sprites/enemy2.png'
+
+HUSKY_WORLD_BRICK = 'data/levels/Husky_World_Brick.png'
+HUSKY_WORLD_WOOD = 'data/levels/Husky_World_Wood.png'
+HUSKY_WORLD_STRUCTURE = 'data/levels/Husky_World_Structure.png'
+
+SPIKE = 'data/sprites/spike.png'
+SPIKE2 = 'data/sprites/spike2.png'
+
+
 
 PLATFORM_WIDTH = 32
 PLATFORM_HEIGHT = 32
