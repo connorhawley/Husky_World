@@ -79,7 +79,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def shoot(self, direction):
-        cooldown = 300  #shoot cooldown in milliseconds (how long before you can shoot again)
+        cooldown = SHOOT_COOLDOWN  #shoot cooldown in milliseconds (how long before you can shoot again)
         current_time = pygame.time.get_ticks()#get current time in milliseconds
 
         if current_time - self.last_time > cooldown: #if time passed is greater than cooldown

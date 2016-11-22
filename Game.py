@@ -2,6 +2,8 @@ from Camera import *
 from MenuCursor import MenuCursor
 from Platform import *
 from Player import Player
+from Coin import Coin
+from Enemy import Enemy
 from data.levels.Level00 import Level00
 from data.levels.Level01 import Level01
 from data.levels.Level02 import Level02
@@ -20,12 +22,14 @@ class Game:
         self.fpsClock = pygame.time.Clock()
         self.gameRunning = True
 
-    def printfps(self):
-        threading.Timer(1.0, self.printfps).start()
-        print("FPS: ", floor(self.fpsClock.get_fps()))
-        print(self.player.rect.x, self.player.rect.y)
-        #print()
+    def display_stats(self):
+        threading.Timer(1.0, self.display_stats).start()
+        #print("(",self.player.rect.x,",",self.player.rect.y,")")
+        print("Enemy platforms: ", len(self.enemy_platform_list))
+        print("Score:", self.score)
 
+    def printfps(self):
+        return str(floor(self.fpsClock.get_fps()))
 
     def new_game(self):
         #reset game/start new game]
@@ -37,10 +41,12 @@ class Game:
         self.exit_blocks_list = pygame.sprite.Group()
         self.jump_blocks_list = pygame.sprite.Group()
         self.kill_blocks_list = pygame.sprite.Group()
+        self.coin_list = pygame.sprite.Group()
+        self.score = 0
         self.current_level = 0
         self.levels = [Level00, Level01, Level02] #list of levels
         self.build_level(self.levels[self.current_level])  #starting level
-        self.printfps()
+        self.display_stats()
         self.run_game_loop()
 
 
@@ -55,7 +61,6 @@ class Game:
 
     def handle_events(self):
         # handle game events
-        #key = pygame.key.get_pressed()
         for event in pygame.event.get():
             # if the X button is pressed then quit/close window
             if event.type == pygame.QUIT:
@@ -84,7 +89,7 @@ class Game:
         self.player.ball_list.update()
         self.enemy_list.update(self.enemy_platform_list)
         self.invincible_enemy_list.update(self.enemy_platform_list)
-
+        self.coin_list.update()
 
 
     def build_level(self, Level):
@@ -97,6 +102,7 @@ class Game:
         self.jump_blocks_list.empty()
         self.exit_blocks_list.empty()
         self.kill_blocks_list.empty()
+        self.coin_list.empty()
         self.enemy_list.empty()
         self.platform_list.empty()
         self.enemy_platform_list.empty()
@@ -113,7 +119,7 @@ class Game:
                     r = EnemyPlatform(x, y)
                     self.platform_list.add(r)
                     self.enemy_platform_list.add(r)
-                if col == "E":
+                if col == "X":
                     e = ExitBlock(x, y)
                     self.exit_blocks_list.add(e)
                 if col == "J":
@@ -122,21 +128,34 @@ class Game:
                 if col == "S":
                     s = Structure(x, y)
                     self.platform_list.add(s)
+                if col == "Q":
+                    q = EnemyStructure(x, y)
+                    self.platform_list.add(q)
+                    self.enemy_platform_list.add(q)
                 if col == "K":
                     k = KillBlock(x, y)
                     self.kill_blocks_list.add(k)
-                    self.enemy_platform_list.add(k)
+                    #self.enemy_platform_list.add(k)
                 if col == "I":
                     i = InvisibleBlock(x, y)
                     self.enemy_platform_list.add(i)
                 if col == "B":
                     b = Brick(x, y)
                     self.platform_list.add(b)
-                    self.enemy_platform_list.add(b)
+                    #self.enemy_platform_list.add(b)
                 if col == "U":
                     u = KillBlock2(x, y)
                     self.kill_blocks_list.add(u)
                     self.enemy_platform_list.add(u)
+                if col == "E":
+                    e = Enemy(x, y, 'normal')
+                    self.enemy_list.add(e)
+                if col == "Z":
+                    z = Enemy(x, y, 'invincible')
+                    self.invincible_enemy_list.add(z)
+                if col == "C":
+                    c = Coin(x, y)
+                    self.coin_list.add(c)
                 x += PLATFORM_WIDTH
             y += PLATFORM_HEIGHT
             x = 0
@@ -170,7 +189,6 @@ class Game:
             if pygame.sprite.spritecollideany(enemy, self.jump_blocks_list):
                 enemy.jump()
 
-
         for enemy in self.invincible_enemy_list:
             self.screen.blit(enemy.image, camera.apply(enemy))
             if pygame.sprite.spritecollideany(enemy, self.jump_blocks_list):
@@ -179,7 +197,9 @@ class Game:
         #restart the level if the player touches an enemy
         if pygame.sprite.groupcollide(self.enemy_list, self.player_list, False, False):
             self.build_level(self.levels[self.current_level])
+            self.score -= 100
         if pygame.sprite.groupcollide(self.invincible_enemy_list, self.player_list, False, False):
+            self.score -= 100
             self.build_level(self.levels[self.current_level])
 
         #draw exit blocks to the screen. If player hits the block then go to next level.
@@ -187,25 +207,43 @@ class Game:
             self.screen.blit(exitblock.image, camera.apply(exitblock))
             if exitblock.rect.colliderect(self.player.rect):
                 self.current_level += 1
+                self.score += 100
                 self.build_level(self.levels[self.current_level])
 
         for killblock in self.kill_blocks_list:
             self.screen.blit(killblock.image, camera.apply(killblock))
 
+        for coin in self.coin_list:
+            self.screen.blit(coin.image, camera.apply(coin))
+
+
 
         if pygame.sprite.groupcollide(self.kill_blocks_list, self.player_list, False, False):
-                self.build_level(self.levels[self.current_level])
+            self.build_level(self.levels[self.current_level])
+            self.score -= 100
+
+        #+200 score if you get a coin
+        if pygame.sprite.groupcollide(self.player_list, self.coin_list, False, True):
+            self.score += 200
 
         #draw all basketballs to the screen and apply camera, and check for collison
         #if ball hits platform, delete ball. if hits enenmy, delete enemy & ball
         for ball in self.player.ball_list:
             self.screen.blit(ball.image, camera.apply(ball))
+
+
         pygame.sprite.groupcollide(self.player.ball_list, self.platform_list, True, False)
-        pygame.sprite.groupcollide(self.player.ball_list, self.enemy_list, True, True)
         pygame.sprite.groupcollide(self.player.ball_list, self.invincible_enemy_list, True, False)
 
+        #+10 score if you kill enemy
+        if pygame.sprite.groupcollide(self.player.ball_list, self.enemy_list, True, True):
+            self.score += 10
 
-        pygame.display.flip()
+        self.print_msg_to_screen(self.printfps(), WHITE, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
+        self.print_msg_to_screen('Score:', WHITE, 'small', -HALF_WINDOW_WIDTH +55 , -HALF_WINDOW_HEIGHT + 20)
+        self.print_msg_to_screen(str(self.score), WHITE, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
+
+        pygame.display.update()
 
 
     def display_main_menu(self):
@@ -218,41 +256,44 @@ class Game:
         selectedOption = 'play'
         while main_menu_open:
             #set background to white
-            self.screen.fill(WHITE)
+            self.screen.fill((173,216,230))
             #draw play and quit text to the screen
+            score_txt = 'Score: +10 for killing enemy, +100 for finishing level, -100 for dying'
             self.print_msg_to_screen('Play', NAVY_BLUE, 'large', 0, -100)
             self.print_msg_to_screen('Quit', NAVY_BLUE, 'large', 0, 100)
-            self.print_msg_to_screen('Test', NAVY_BLUE, 'large', 0, 300)
+            self.print_msg_to_screen(score_txt, NAVY_BLUE, 'small', 0, 300)
+            #self.print_msg_to_screen('Test', NAVY_BLUE, 'large', 0, 300)
             #draw menu arrow cursor on the screen
             mainMenuCursor.draw(self.screen)
             keypressed = pygame.key.get_pressed()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                if keypressed[K_DOWN]:
+                if keypressed[K_s]:
                     if at_menu_bottom:
                         pass
                     else:
                         mainMenuCursor.moveDown()
-                elif keypressed[K_UP]:
+                elif keypressed[K_w]:
                     if at_menu_top:
                         pass
                     else:
                         mainMenuCursor.moveUp()
                     #259 is the center y coordinate of the Play text
                 if mainMenuCursor.rect.y == 259:
+                    at_menu_bottom = False
                     at_menu_top = True
                     if keypressed[K_RETURN]:
                         main_menu_open = False
                     #459 is the center y coordinate of the quit text
                 if mainMenuCursor.rect.y == 459:
                     at_menu_top = False
-                    at_menu_bottom = False
+                    at_menu_bottom = True
                     if keypressed[K_RETURN]:
                         pygame.quit()
-                if mainMenuCursor.rect.y == 659:
-                    at_menu_top = False
-                    at_menu_bottom = True
+                # if mainMenuCursor.rect.y == 659:
+                #     at_menu_top = False
+                #     at_menu_bottom = True
 
 
             pygame.display.update()

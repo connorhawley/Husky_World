@@ -12,8 +12,10 @@ SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 TITLE = "Husky World"
 #Colors
 RED = (255,0,0)
-BLUE = (0,0,255)
+ORANGE = (255,165,0)
+YELLOW = (255,255,0)
 GREEN = (0,255,0)
+BLUE = (0,0,255)
 PURPLE = (255,0,255)
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -47,7 +49,13 @@ SPIKE2 = 'data/sprites/spike2.png'
 PLATFORM_WIDTH = 32
 PLATFORM_HEIGHT = 32
 
-#player movement variables
+#player ball shoot cooldown in ms
+SHOOT_COOLDOWN = 500
+
+
+#movement variables
 GRAVITY = 0.5
 JUMP_HEIGHT = 13
 PLAYER_SPEED = 8
+ENEMY_SPEED = 3
+

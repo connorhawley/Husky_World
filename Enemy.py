@@ -18,9 +18,9 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self, platforms):
         if self.direction == 'left':
-            self.dx = -3
+            self.dx = -ENEMY_SPEED
         if self.direction == 'right':
-            self.dx = 3
+            self.dx = ENEMY_SPEED
 
         if not self.onGround:
             self.dy += GRAVITY
