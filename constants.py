@@ -44,6 +44,8 @@ HUSKY_WORLD_STRUCTURE = 'data/levels/Husky_World_Structure.png'
 SPIKE = 'data/sprites/spike.png'
 SPIKE2 = 'data/sprites/spike2.png'
 
+HELP_MENU = 'data/sprites/help_menu.png'
+
 
 
 PLATFORM_WIDTH = 32

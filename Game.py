@@ -1,7 +1,6 @@
 from Camera import *
 from MenuCursor import MenuCursor
 from Platform import *
-from Player import Player
 from Coin import Coin
 from Enemy import Enemy
 from data.levels.Level00 import Level00
@@ -26,13 +25,41 @@ class Game:
         threading.Timer(1.0, self.display_stats).start()
         #print("(",self.player.rect.x,",",self.player.rect.y,")")
         print("Enemy platforms: ", len(self.enemy_platform_list))
-        print("Score:", self.score)
+        #print("Score:", self.score)
 
     def printfps(self):
         return str(floor(self.fpsClock.get_fps()))
 
+    def get_high_score(self):
+        high_score = 0
+        try:
+            high_score_file = open("high_score.txt", "r")
+            high_score = int(high_score_file.read())
+            high_score_file.close()
+        except IOError:
+            # Error reading file, no high score
+            print("There is no high score yet.")
+        except ValueError:
+            # There's a file there, but we don't understand the number.
+            print("Invalid number, starting at zero.")
+
+        return high_score
+
+    def save_high_score(self, new_high_score):
+        try:
+            # Write the file to disk
+            high_score_file = open("high_score.txt", "w")
+            high_score_file.write(str(new_high_score))
+            high_score_file.close()
+        except IOError:
+            print("Unable to save the high score.")
+
+
+
+
     def new_game(self):
         #reset game/start new game]
+        self.get_high_score()
         self.player_list = pygame.sprite.Group()
         self.enemy_list = pygame.sprite.Group()
         self.invincible_enemy_list = pygame.sprite.Group()
@@ -44,9 +71,11 @@ class Game:
         self.coin_list = pygame.sprite.Group()
         self.score = 0
         self.current_level = 0
+        self.display_main_menu()
         self.levels = [Level00, Level01, Level02] #list of levels
         self.build_level(self.levels[self.current_level])  #starting level
         self.display_stats()
+
         self.run_game_loop()
 
 
@@ -59,6 +88,7 @@ class Game:
             self.draw()
             self.fpsClock.tick(FPS)
 
+
     def handle_events(self):
         # handle game events
         for event in pygame.event.get():
@@ -67,6 +97,7 @@ class Game:
                 if self.playing:
                     self.playing = False
                     self.gameRunning = False
+                    pygame.quit()
             if pygame.key.get_pressed()[K_ESCAPE]:
                 self.pause()
             #for testing purposes, pressing K/L goes to previous or next level
@@ -206,6 +237,8 @@ class Game:
         for exitblock in self.exit_blocks_list:
             self.screen.blit(exitblock.image, camera.apply(exitblock))
             if exitblock.rect.colliderect(self.player.rect):
+                if self.current_level + 1 > len(self.levels):
+                    print("No next level.")
                 self.current_level += 1
                 self.score += 100
                 self.build_level(self.levels[self.current_level])
@@ -215,7 +248,6 @@ class Game:
 
         for coin in self.coin_list:
             self.screen.blit(coin.image, camera.apply(coin))
-
 
 
         if pygame.sprite.groupcollide(self.kill_blocks_list, self.player_list, False, False):
@@ -240,7 +272,7 @@ class Game:
             self.score += 10
 
         self.print_msg_to_screen(self.printfps(), WHITE, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
-        self.print_msg_to_screen('Score:', WHITE, 'small', -HALF_WINDOW_WIDTH +55 , -HALF_WINDOW_HEIGHT + 20)
+        self.print_msg_to_screen('Score:', WHITE, 'small', -HALF_WINDOW_WIDTH +55, -HALF_WINDOW_HEIGHT + 20)
         self.print_msg_to_screen(str(self.score), WHITE, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
 
         pygame.display.update()
@@ -252,19 +284,18 @@ class Game:
         at_menu_bottom = False
         at_menu_top = True
         # create mouse cursor arrow
-        mainMenuCursor = MenuCursor()
-        selectedOption = 'play'
+        menu_cursor = MenuCursor()
         while main_menu_open:
             #set background to white
             self.screen.fill((173,216,230))
             #draw play and quit text to the screen
-            score_txt = 'Score: +10 for killing enemy, +100 for finishing level, -100 for dying'
+            self.print_msg_to_screen('Current High Score:', NAVY_BLUE, 'small', -300, 250)
+            self.print_msg_to_screen(str(self.get_high_score()), NAVY_BLUE, 'medium', -310, 300)
             self.print_msg_to_screen('Play', NAVY_BLUE, 'large', 0, -100)
-            self.print_msg_to_screen('Quit', NAVY_BLUE, 'large', 0, 100)
-            self.print_msg_to_screen(score_txt, NAVY_BLUE, 'small', 0, 300)
-            #self.print_msg_to_screen('Test', NAVY_BLUE, 'large', 0, 300)
+            self.print_msg_to_screen('Quit', NAVY_BLUE, 'large', 0, 0)
+            self.print_msg_to_screen('Help', NAVY_BLUE, 'large', 0, 100)
             #draw menu arrow cursor on the screen
-            mainMenuCursor.draw(self.screen)
+            menu_cursor.draw(self.screen)
             keypressed = pygame.key.get_pressed()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -273,29 +304,49 @@ class Game:
                     if at_menu_bottom:
                         pass
                     else:
-                        mainMenuCursor.moveDown()
+                        menu_cursor.moveDown()
                 elif keypressed[K_w]:
                     if at_menu_top:
                         pass
                     else:
-                        mainMenuCursor.moveUp()
+                        menu_cursor.moveUp()
                     #259 is the center y coordinate of the Play text
-                if mainMenuCursor.rect.y == 259:
+                if menu_cursor.rect.y == 259:
                     at_menu_bottom = False
                     at_menu_top = True
                     if keypressed[K_RETURN]:
                         main_menu_open = False
                     #459 is the center y coordinate of the quit text
-                if mainMenuCursor.rect.y == 459:
+                if menu_cursor.rect.y == 359:
                     at_menu_top = False
-                    at_menu_bottom = True
+                    at_menu_bottom = False
                     if keypressed[K_RETURN]:
                         pygame.quit()
-                # if mainMenuCursor.rect.y == 659:
-                #     at_menu_top = False
-                #     at_menu_bottom = True
+                if menu_cursor.rect.y == 459:
+                     at_menu_top = False
+                     at_menu_bottom = True
+                     if keypressed[K_RETURN]:
+                        main_menu_open = False
+                        self.display_help_menu()
+
+            pygame.display.update()
 
 
+
+    #display the help menu
+    def display_help_menu(self):
+        help_menu_open = True
+        menu_image = pygame.image.load(HELP_MENU).convert_alpha()
+        menu_rect = menu_image.get_rect()
+
+        while help_menu_open:
+            self.screen.blit(menu_image, menu_rect)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if pygame.key.get_pressed()[K_ESCAPE]:
+                    help_menu_open = False
+                    self.display_main_menu()
             pygame.display.update()
 
 
@@ -307,19 +358,62 @@ class Game:
     def pause(self):
         #pause the game when escape key is pressed
         self.paused = True
-        self.print_msg_to_screen('Paused, press Q to quit', BLACK, 'medium')
-        pygame.display.update()
+        bg = pygame.Surface([1024,768])
+        bg.fill((173,216,230))
+        bg_rect = bg.get_rect()
+        pause_cursor = MenuCursor()
+        pause_cursor.rect.x = 284
+        pause_cursor.rect.y = 362
+        at_menu_top = True
+        at_menu_bottom = False
+
         while self.paused:
+            self.screen.blit(bg, bg_rect)
+            self.screen.blit(pause_cursor.image, (pause_cursor.rect.x, pause_cursor.rect.y))
+            self.print_msg_to_screen('Score:', WHITE, 'small', -HALF_WINDOW_WIDTH + 55, -HALF_WINDOW_HEIGHT + 20)
+            self.print_msg_to_screen(str(self.score), WHITE, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
+            self.print_msg_to_screen('Paused', NAVY_BLUE, 'large', 0, -200)
+            self.print_msg_to_screen('Resume', NAVY_BLUE, 'large', 0, 0)
+            self.print_msg_to_screen('Main Menu', NAVY_BLUE, 'large', 0, 100)
+            self.print_msg_to_screen('Quit', NAVY_BLUE, 'large', 0, 200)
+
+            keypressed = pygame.key.get_pressed()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                if pygame.key.get_pressed()[pygame.K_q]:
-                    pygame.quit()
-                if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                    #print('unpausing')
-                    self.paused = False
-       #self.fpsClock.tick(3)
-
+                if keypressed[K_s]:
+                    if at_menu_bottom:
+                        pass
+                    else:
+                        pause_cursor.moveDown()
+                elif keypressed[K_w]:
+                    if at_menu_top:
+                        pass
+                    else:
+                        pause_cursor.moveUp()
+                if pause_cursor.rect.y == 362:
+                    pause_cursor.rect.x = 284
+                    at_menu_bottom = False
+                    at_menu_top = True
+                    if keypressed[K_RETURN]:
+                        self.paused = False
+                if pause_cursor.rect.y == 462:
+                    pause_cursor.rect.x = 224
+                    at_menu_top = False
+                    at_menu_bottom = False
+                    if keypressed[K_RETURN]:
+                        if self.score > self.get_high_score():
+                            self.save_high_score(self.score)
+                        self.new_game()
+                if pause_cursor.rect.y == 562:
+                     pause_cursor.rect.x = 349
+                     at_menu_top = False
+                     at_menu_bottom = True
+                     if keypressed[K_RETURN]:
+                         if self.score > self.get_high_score():
+                            self.save_high_score(self.score)
+                         pygame.quit()
+            pygame.display.update()
 
     #function to create text object on screen with specific message, color, size(Sizes specific in constants script)
     def text_objects(self, msg, color, size):

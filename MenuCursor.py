@@ -12,17 +12,9 @@ class MenuCursor(pygame.sprite.Sprite):
 
 
     def moveUp(self):
-        self.rect.y -= 200
+        self.rect.y -= 100
     def moveDown(self):
-        self.rect.y += 200
-
-    def handleKeys(self):
-        key = pygame.key.get_pressed()
-        if key[pygame.K_DOWN]:
-            self.moveDown()
-        if key[pygame.K_UP]:
-            self.moveUp()
-
+        self.rect.y += 100
 
     def draw(self, surface):
         surface.blit(self.image, (self.rect.x, self.rect.y))
