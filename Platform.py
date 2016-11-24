@@ -58,8 +58,6 @@ class InvisibleBlock(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
         self.image = pygame.Surface([32,32])
-        self.image.fill(PURPLE)
-        self.image.set_alpha(100)
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 class Brick(Entity):

@@ -17,6 +17,7 @@ class Game:
         pygame.init()
         pygame.mixer.init()
         self.screen = pygame.display.set_mode(SIZE)
+        print(pygame.display.Info())
         pygame.display.set_caption(TITLE)
         self.fpsClock = pygame.time.Clock()
         self.gameRunning = True
@@ -25,6 +26,7 @@ class Game:
         threading.Timer(1.0, self.display_stats).start()
         #print("(",self.player.rect.x,",",self.player.rect.y,")")
         print("Enemy platforms: ", len(self.enemy_platform_list))
+        print("Platforms:", len(self.platform_list))
         #print("Score:", self.score)
 
     def printfps(self):
@@ -71,11 +73,10 @@ class Game:
         self.coin_list = pygame.sprite.Group()
         self.score = 0
         self.current_level = 0
-        self.display_main_menu()
         self.levels = [Level00, Level01, Level02] #list of levels
+        self.display_main_menu()
         self.build_level(self.levels[self.current_level])  #starting level
         self.display_stats()
-
         self.run_game_loop()
 
 
