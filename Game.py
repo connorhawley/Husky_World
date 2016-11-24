@@ -20,6 +20,7 @@ class Game:
         pygame.display.set_caption(TITLE)
         self.fpsClock = pygame.time.Clock()
         self.gameRunning = True
+        self.noclipping = False
 
     def display_stats(self):
         threading.Timer(1.0, self.display_stats).start()
@@ -115,10 +116,18 @@ class Game:
                 else:
                     self.build_level(self.levels[self.current_level+1])
                     self.current_level += 1
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_n:
+                    self.noclipping = not self.noclipping
 
     def update(self):
         #call update functions on lists
-        self.player_list.update(self.platform_list)
+
+        if self.noclipping == False:
+            self.player_list.update(self.platform_list)
+        else:
+            self.player.noclip()
+
         self.player.ball_list.update()
         self.enemy_list.update(self.enemy_platform_list)
         self.invincible_enemy_list.update(self.enemy_platform_list)
@@ -239,11 +248,12 @@ class Game:
         for exitblock in self.exit_blocks_list:
             self.screen.blit(exitblock.image, camera.apply(exitblock))
             if exitblock.rect.colliderect(self.player.rect):
-                if self.current_level + 1 > len(self.levels):
+                if self.current_level + 2 > len(self.levels):
                     print("No next level.")
-                self.current_level += 1
-                self.score += 100
-                self.build_level(self.levels[self.current_level])
+                else:
+                    self.current_level += 1
+                    self.score += 100
+                    self.build_level(self.levels[self.current_level])
 
         for killblock in self.kill_blocks_list:
             self.screen.blit(killblock.image, camera.apply(killblock))

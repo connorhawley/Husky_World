@@ -122,6 +122,25 @@ class Player(pygame.sprite.Sprite):
                     self.rect.top = platform.rect.bottom  #set top coordinate to bottom coordinate of platform
                     self.dy += 2
 
+    def noclip(self):
+        keypressed = pygame.key.get_pressed()
+
+        if keypressed[pygame.K_w]:
+            self.dy = -PLAYER_SPEED*2
+            self.rect.top += self.dy
+        if keypressed[pygame.K_s]:
+            self.dy = PLAYER_SPEED*2
+            self.rect.top += self.dy
+        if keypressed[pygame.K_a]:
+            self.dx = -PLAYER_SPEED*2
+            self.rect.left += self.dx
+        if keypressed[pygame.K_d]:
+            self.dx = PLAYER_SPEED*2
+            self.rect.left += self.dx
+
+
+
+
 
     def create_sprite_sheet(self, size, file, initial_position):
         #sprites must be of the same size

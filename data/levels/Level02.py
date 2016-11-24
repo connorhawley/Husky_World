@@ -145,7 +145,7 @@ class Level02(Level):
 "P                                                                                                                PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP                                      P",
 "P                                                                                                                    PPP         PPP         PPP         PPP                                           P",
 "PSSS                                                                                                                 PPP         PPP         PPP         PPP                                      SSSSSP",
-"P                                                                                                                    PPP         PPP         PPP         PPP                                           P",
+"P                                                                                                                    PPP         PPP         RRR         RRR                                           P",
 "P                                                                                                                                                                                                      P",
 "P                                                                                                                          PPP         PPP         PPP         PPP                       SKKKKKKKKKKKKKP",
 "P        SSS                                                                                                               PPP         PPP         PPP         PPP                       SSSSSSSSSSSSSSP",
