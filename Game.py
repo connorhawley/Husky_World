@@ -17,7 +17,6 @@ class Game:
         pygame.init()
         pygame.mixer.init()
         self.screen = pygame.display.set_mode(SIZE)
-        print(pygame.display.Info())
         pygame.display.set_caption(TITLE)
         self.fpsClock = pygame.time.Clock()
         self.gameRunning = True
@@ -27,6 +26,8 @@ class Game:
         #print("(",self.player.rect.x,",",self.player.rect.y,")")
         print("Enemy platforms: ", len(self.enemy_platform_list))
         print("Platforms:", len(self.platform_list))
+        print("FPS:", self.printfps())
+        print("(",self.player.rect.x,",",self.player.rect.y,")")
         #print("Score:", self.score)
 
     def printfps(self):
@@ -272,7 +273,7 @@ class Game:
         if pygame.sprite.groupcollide(self.player.ball_list, self.enemy_list, True, True):
             self.score += 10
 
-        self.print_msg_to_screen(self.printfps(), WHITE, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
+        #self.print_msg_to_screen(self.printfps(), WHITE, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
         self.print_msg_to_screen('Score:', WHITE, 'small', -HALF_WINDOW_WIDTH +55, -HALF_WINDOW_HEIGHT + 20)
         self.print_msg_to_screen(str(self.score), WHITE, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
 
@@ -290,7 +291,7 @@ class Game:
             #set background to white
             self.screen.fill((173,216,230))
             #draw play and quit text to the screen
-            self.print_msg_to_screen('Current High Score:', NAVY_BLUE, 'small', -300, 250)
+            self.print_msg_to_screen('High Score:', NAVY_BLUE, 'small', -300, 250)
             self.print_msg_to_screen(str(self.get_high_score()), NAVY_BLUE, 'medium', -310, 300)
             self.print_msg_to_screen('Play', NAVY_BLUE, 'large', 0, -100)
             self.print_msg_to_screen('Quit', NAVY_BLUE, 'large', 0, 0)
@@ -436,7 +437,6 @@ class Game:
         textRect.center = (HALF_WINDOW_WIDTH + dx), (HALF_WINDOW_HEIGHT + dy)
         self.screen.blit(textSurface, textRect)
         return [textRect.left, textRect.centery]
-       # print(textRect.left, textRect.centery)
 
     # def render_tiles_to_screen(self, filename):
     #     tmx_data = load_pygame(filename)
