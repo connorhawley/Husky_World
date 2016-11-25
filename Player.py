@@ -34,6 +34,8 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_w]:
             if self.onGround:
                 self.dy -= JUMP_HEIGHT
+                pygame.mixer.music.load("data/Audio/Jump.wav")
+                pygame.mixer.music.play(1, 0)
             if key[pygame.K_a]:
                 self.move_left()
             if key[pygame.K_d]:
