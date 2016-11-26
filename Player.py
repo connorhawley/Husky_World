@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
         self.image_framerate = 7
         self.image_count = len(self.left_images)
-        self.ball_list = pygame.sprite.Group()
+        self.ball_list = []
         self.last_time = pygame.time.get_ticks() #get time in milliseconds
 
 
@@ -146,6 +146,8 @@ class Player(pygame.sprite.Sprite):
 
 
 
+
+
     def create_sprite_sheet(self, size, file, initial_position):
         #sprites must be of the same size
         (sprite_width, sprite_height) = size  # sprite size
@@ -162,5 +164,3 @@ class Player(pygame.sprite.Sprite):
             sprite_rect_y += sprite_height
             sprite_rect_x = 0 #go back to the beginning of the row
         return sprite_list  #return the list of all of the sprites
-
-
