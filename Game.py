@@ -20,15 +20,16 @@ class Game:
         pygame.display.set_caption(TITLE)
         self.fpsClock = pygame.time.Clock()
         self.gameRunning = True
+        self.playing = True
         self.noclipping = False
+
 
     def display_stats(self):
         threading.Timer(1.0, self.display_stats).start()
-        #print("(",self.player.rect.x,",",self.player.rect.y,")")
         print("Enemy platforms: ", len(self.enemy_platform_list))
         print("Platforms:", len(self.platform_list))
         print("FPS:", self.printfps())
-        print("(",self.player.rect.x,",",self.player.rect.y,")")
+        print("(",self.player.rect.x,",",self.player.rect.y,")",'\n')
         #print("Score:", self.score)
 
     def printfps(self):
@@ -59,8 +60,6 @@ class Game:
             print("Unable to save the high score.")
 
 
-
-
     def new_game(self):
         #reset game/start new game]
         self.get_high_score()
@@ -69,6 +68,7 @@ class Game:
         self.invincible_enemy_list = pygame.sprite.Group()
         self.platform_list = pygame.sprite.Group()
         self.enemy_platform_list = pygame.sprite.Group()
+        self.fake_blocks_list = pygame.sprite.Group()
         self.exit_blocks_list = pygame.sprite.Group()
         self.jump_blocks_list = pygame.sprite.Group()
         self.kill_blocks_list = pygame.sprite.Group()
@@ -84,7 +84,6 @@ class Game:
 
     def run_game_loop(self):
         # The main game loop
-        self.playing = True
         while self.playing:
             self.handle_events()
             self.update()
@@ -144,6 +143,7 @@ class Game:
         self.jump_blocks_list.empty()
         self.exit_blocks_list.empty()
         self.kill_blocks_list.empty()
+        self.fake_blocks_list.empty()
         self.coin_list.empty()
         self.enemy_list.empty()
         self.platform_list.empty()
@@ -198,6 +198,9 @@ class Game:
                 if col == "C":
                     c = Coin(x, y)
                     self.coin_list.add(c)
+                if col == "F":
+                    f = FakePlatform(x, y)
+                    self.fake_blocks_list.add(f)
                 x += PLATFORM_WIDTH
             y += PLATFORM_HEIGHT
             x = 0
@@ -215,31 +218,41 @@ class Game:
         #create camera that is centered around the player:
         #camera = Camera(simple_camera, self.total_level_width, self.total_level_height)
 
-
         camera.update(self.player)
 
-        #draw all the sprites/images to screen and apply camera to them
+        #draw all the platforms to screen and apply camera to them
         for platform in self.platform_list:
             self.screen.blit(platform.image, camera.apply(platform))
 
+        #draw the player to screen and apply camera to them
         for player in self.player_list:
             self.screen.blit(player.image, camera.apply(player))
 
+        # draw the enemies to screen and apply camera to them. If enemy touches jump block then the enemy will jump
         for enemy in self.enemy_list:
             self.screen.blit(enemy.image, camera.apply(enemy))
             #if enemy hits a jump block, then jump.
             if pygame.sprite.spritecollideany(enemy, self.jump_blocks_list):
                 enemy.jump()
 
+
+        # draw the invincible enemies to screen and apply camera to them. If enemy touches jump block then the enemy will jump
         for enemy in self.invincible_enemy_list:
             self.screen.blit(enemy.image, camera.apply(enemy))
             if pygame.sprite.spritecollideany(enemy, self.jump_blocks_list):
                 enemy.jump()
 
-        #restart the level if the player touches an enemy
-        if pygame.sprite.groupcollide(self.enemy_list, self.player_list, False, False):
-            self.build_level(self.levels[self.current_level])
-            self.score -= 100
+        #if player jumps on enemy's head, then kill the enemy. If player runs into enemy, then restart level and -100 points
+        for player, enemies in pygame.sprite.groupcollide(self.player_list, self.enemy_list, False, False).items():
+            if self.player.dy > 0:
+                for e in enemies:
+                    if e.rect.top < self.player.rect.bottom:
+                        self.player.dy = -10
+                        self.enemy_list.remove(e)
+            else:
+                self.build_level(self.levels[self.current_level])
+                self.score -= 100
+
         if pygame.sprite.groupcollide(self.invincible_enemy_list, self.player_list, False, False):
             self.score -= 100
             self.build_level(self.levels[self.current_level])
@@ -258,6 +271,9 @@ class Game:
         for killblock in self.kill_blocks_list:
             self.screen.blit(killblock.image, camera.apply(killblock))
 
+        for fakeblock in self.fake_blocks_list:
+            self.screen.blit(fakeblock.image, camera.apply(fakeblock))
+
         for coin in self.coin_list:
             self.screen.blit(coin.image, camera.apply(coin))
 
@@ -275,13 +291,13 @@ class Game:
         for ball in self.player.ball_list:
             self.screen.blit(ball.image, camera.apply(ball))
 
-
         pygame.sprite.groupcollide(self.player.ball_list, self.platform_list, True, False)
         pygame.sprite.groupcollide(self.player.ball_list, self.invincible_enemy_list, True, False)
 
         #+10 score if you kill enemy
-        if pygame.sprite.groupcollide(self.player.ball_list, self.enemy_list, True, True):
-            self.score += 10
+        for enemy in pygame.sprite.groupcollide(self.enemy_list, self.player.ball_list, True, True):
+              self.score += 10
+
 
         #self.print_msg_to_screen(self.printfps(), WHITE, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
         self.print_msg_to_screen('Score:', WHITE, 'small', -HALF_WINDOW_WIDTH +55, -HALF_WINDOW_HEIGHT + 20)
@@ -342,8 +358,6 @@ class Game:
                         self.display_help_menu()
 
             pygame.display.update()
-
-
 
     #display the help menu
     def display_help_menu(self):
