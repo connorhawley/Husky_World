@@ -3,7 +3,7 @@ from Level import *
 class Level02(Level):
     def __init__(self):
         super().__init__()
-        self.player = Player(32, 912)
+        self.player = Player(96, 880)
 
         self.level = [
 "                                                                                                                                                                                                        ",
@@ -34,7 +34,7 @@ class Level02(Level):
 "P                SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS                                                                                                                         SSS   B   B   SSS        P",
 "P                UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU                        PPPP                                             SSSS                                     I E I        B   B              P",
 "P                                                                            PPPP                                             SSSS                                      SSS         B   B        SSS   P",
-"P      E                     E                        E                  PPPPPPPPPPPPPPP        PPPPPPP        PPPPP                                                                B   B              P",
+"P                     E      E                        E                  PPPPPPPPPPPPPPP        PPPPPPP        PPPPP                                                                B   B              P",
 "R                 J                      J                               RPPPPPPPPPPPPPP        PPPPPPP        PPPPP                                                                B   B              P",
 "PRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPPPPPPPPPPPPPKKKKKKKKPPPPPPPKKKKKKKKPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP   PPPPPPPPPPPPPPPP",
 "FFFFFFFFFFFFFPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                                       P",

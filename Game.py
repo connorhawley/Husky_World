@@ -26,10 +26,10 @@ class Game:
 
     def display_stats(self):
         threading.Timer(1.0, self.display_stats).start()
-        print("Enemy platforms: ", len(self.enemy_platform_list))
-        print("Platforms:", len(self.platform_list))
+        #print("Enemy platforms: ", len(self.enemy_platform_list))
+        #print("Platforms:", len(self.platform_list))
         print("FPS:", self.printfps())
-        print("(",self.player.rect.x,",",self.player.rect.y,")",'\n')
+        #print("(",self.player.rect.x,",",self.player.rect.y,")",'\n')
         #print("Score:", self.score)
 
     def printfps(self):
@@ -246,7 +246,9 @@ class Game:
         for player, enemies in pygame.sprite.groupcollide(self.player_list, self.enemy_list, False, False).items():
             if self.player.dy > 0:
                 for e in enemies:
-                    if e.rect.top < self.player.rect.bottom:
+                    if e.rect.top+32 > self.player.rect.bottom:
+                        #print(e.rect.top, self.player.rect.bottom)
+                        self.score += 10
                         self.player.dy = -10
                         self.enemy_list.remove(e)
             else:
@@ -461,44 +463,3 @@ class Game:
         textRect.center = (HALF_WINDOW_WIDTH + dx), (HALF_WINDOW_HEIGHT + dy)
         self.screen.blit(textSurface, textRect)
         return [textRect.left, textRect.centery]
-
-    # def render_tiles_to_screen(self, filename):
-    #     tmx_data = load_pygame(filename)
-    #     if tmx_data.background_color:
-    #         self.screen.fill(pygame.Color(self.tmx_data.background_color))
-    #
-    #     # iterate over all the visible layers, then draw them
-    #     # according to the type of layer they are.
-    #     for layer in tmx_data.visible_layers:
-    #
-    #         # draw map tile layers
-    #         if isinstance(layer, pytmx.TiledTileLayer):
-    #
-    #             # iterate over the tiles in the layer
-    #             for x, y, image in layer.tiles():
-    #                 self.screen.blit(image, (x * tmx_data.tilewidth, y * tmx_data.tileheight))
-    #
-    #         # draw object layers
-    #         elif isinstance(layer, pytmx.TiledObjectGroup):
-    #
-    #             # iterate over all the objects in the layer
-    #             for obj in layer:
-    #
-    #                 # objects with points are polygons or lines
-    #                 if hasattr(obj, 'points'):
-    #                     pygame.draw.lines(self.screen, self.poly_color,
-    #                                       obj.closed, obj.points, 3)
-    #
-    #                 # some object have an image
-    #                 elif obj.image:
-    #                     self.screen.blit(obj.image, (obj.x, obj.y))
-    #
-    #                 # draw a rect for everything else
-    #                 else:
-    #                     pygame.draw.rect(self.screen, self.rect_color,
-    #                                      (obj.x, obj.y, obj.width, obj.height), 3)
-    #
-    #         # draw image layers
-    #         elif isinstance(layer, pytmx.TiledImageLayer):
-    #             if layer.image:
-    #                 self.screen.blit(layer.image, (0, 0))

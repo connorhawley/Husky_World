@@ -1,7 +1,7 @@
 from constants import *
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, type='normal'):
+    def __init__(self, x, y, type='normal', direction='left'):
         super().__init__()
         if type == 'normal':
             self.image = pygame.image.load(ENEMY_SPRITE).convert_alpha()
@@ -14,7 +14,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.y = y
         self.dx = 0
         self.dy = 0
-        self.direction = 'left'
+        self.direction = direction
 
     def update(self, platforms):
         if self.direction == 'left':
