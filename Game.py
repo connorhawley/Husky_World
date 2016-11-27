@@ -8,7 +8,7 @@ from data.levels.Level01 import Level01
 from data.levels.Level02 import Level02
 
 import threading
-from math import *
+from math import floor
 
 
 class Game:
@@ -446,20 +446,20 @@ class Game:
     #function to create text object on screen with specific message, color, size(Sizes specific in constants script)
     def text_objects(self, msg, color, size):
         if size == 'small':
-            textSurface = SMALLFONT.render(msg, True, color)
-            return textSurface, textSurface.get_rect()
+            text_surface = SMALLFONT.render(msg, True, color)
+            return text_surface, text_surface.get_rect()
         elif size == 'medium':
-            textSurface = MEDIUMFONT.render(msg, True, color)
-            return textSurface, textSurface.get_rect()
+            text_surface = MEDIUMFONT.render(msg, True, color)
+            return text_surface, text_surface.get_rect()
         elif size == 'large':
-            textSurface = LARGEFONT.render(msg, True, color)
-            return textSurface, textSurface.get_rect()
+            text_surface = LARGEFONT.render(msg, True, color)
+            return text_surface, text_surface.get_rect()
 
     # function to display text messages on screen.
     # (creates a message that can be offset based off of the center of the window using dx and dy)
     def print_msg_to_screen(self, msg, color, size='large', dx=0, dy=0):
-        textSurface, textRect = self.text_objects(msg, color, size)
+        text_surface, text_rect = self.text_objects(msg, color, size)
         # => get_rect().center returns a rectangle covering the surface, in this case it's the text ones
-        textRect.center = (HALF_WINDOW_WIDTH + dx), (HALF_WINDOW_HEIGHT + dy)
-        self.screen.blit(textSurface, textRect)
-        return [textRect.left, textRect.centery]
+        text_rect.center = (HALF_WINDOW_WIDTH + dx), (HALF_WINDOW_HEIGHT + dy)
+        self.screen.blit(text_surface, text_rect)
+        return [text_rect.left, text_rect.centery]
