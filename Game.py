@@ -224,9 +224,6 @@ class Game:
         for platform in self.platform_list:
             self.screen.blit(platform.image, camera.apply(platform))
 
-        #draw the player to screen and apply camera to them
-        for player in self.player_list:
-            self.screen.blit(player.image, camera.apply(player))
 
         # draw the enemies to screen and apply camera to them. If enemy touches jump block then the enemy will jump
         for enemy in self.enemy_list:
@@ -263,12 +260,17 @@ class Game:
         for exitblock in self.exit_blocks_list:
             self.screen.blit(exitblock.image, camera.apply(exitblock))
             if exitblock.rect.colliderect(self.player.rect):
-                if self.current_level + 2 > len(self.levels):
-                    print("No next level.")
-                else:
-                    self.current_level += 1
-                    self.score += 100
-                    self.build_level(self.levels[self.current_level])
+                if ((exitblock.rect.centerx - 32) - (self.player.rect.centerx - 32))  < 10:
+                    if self.current_level + 2 > len(self.levels):
+                        print("No next level.")
+                    else:
+                        self.current_level += 1
+                        self.score += 100
+                        self.build_level(self.levels[self.current_level])
+
+        # draw the player to screen and apply camera to them
+        for player in self.player_list:
+            self.screen.blit(player.image, camera.apply(player))
 
         for killblock in self.kill_blocks_list:
             self.screen.blit(killblock.image, camera.apply(killblock))

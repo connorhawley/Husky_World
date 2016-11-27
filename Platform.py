@@ -44,9 +44,8 @@ class JumpBlock(Entity):
 class ExitBlock(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.Surface([32,32])
-        self.image.fill(GREEN)
-        self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
+        self.image = pygame.image.load('data/sprites/hoop.png').convert_alpha()
+        self.rect = Rect(x-128, y-234, 160, 266)
 
 class KillBlock(Entity):
     def __init__(self, x, y):
