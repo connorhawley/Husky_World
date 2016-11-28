@@ -224,7 +224,6 @@ class Game:
         for platform in self.platform_list:
             self.screen.blit(platform.image, camera.apply(platform))
 
-
         # draw the enemies to screen and apply camera to them. If enemy touches jump block then the enemy will jump
         for enemy in self.enemy_list:
             self.screen.blit(enemy.image, camera.apply(enemy))
@@ -304,8 +303,8 @@ class Game:
 
 
         #self.print_msg_to_screen(self.printfps(), WHITE, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
-        self.print_msg_to_screen('Score:', WHITE, 'small', -HALF_WINDOW_WIDTH +55, -HALF_WINDOW_HEIGHT + 20)
-        self.print_msg_to_screen(str(self.score), WHITE, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
+        self.print_msg_to_screen('Score:', WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH +55, -HALF_WINDOW_HEIGHT + 20)
+        self.print_msg_to_screen(str(self.score), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
 
         pygame.display.update()
 
@@ -315,18 +314,22 @@ class Game:
         main_menu_open = True
         at_menu_bottom = False
         at_menu_top = True
+        #create menu surface
+        bg = pygame.Surface(SIZE)
+        bg.fill((173,216,230))
+        self.print_msg_to_screen('High Score:', NAVY_BLUE, bg, 'small', -300, 250)
+        self.print_msg_to_screen(str(self.get_high_score()), NAVY_BLUE, bg, 'medium', -310, 300)
+        self.print_msg_to_screen('Play', NAVY_BLUE, bg, 'large', 0, -100)
+        self.print_msg_to_screen('Quit', NAVY_BLUE, bg, 'large', 0, 0)
+        self.print_msg_to_screen('Help', NAVY_BLUE, bg, 'large', 0, 100)
+        bg_rect = bg.get_rect()
+
+
         # create mouse cursor arrow
         menu_cursor = MenuCursor()
         while main_menu_open:
-            #set background to white
-            self.screen.fill((173,216,230))
-            #draw play and quit text to the screen
-            self.print_msg_to_screen('High Score:', NAVY_BLUE, 'small', -300, 250)
-            self.print_msg_to_screen(str(self.get_high_score()), NAVY_BLUE, 'medium', -310, 300)
-            self.print_msg_to_screen('Play', NAVY_BLUE, 'large', 0, -100)
-            self.print_msg_to_screen('Quit', NAVY_BLUE, 'large', 0, 0)
-            self.print_msg_to_screen('Help', NAVY_BLUE, 'large', 0, 100)
             #draw menu arrow cursor on the screen
+            self.screen.blit(bg, bg_rect)
             menu_cursor.draw(self.screen)
             keypressed = pygame.key.get_pressed()
             for event in pygame.event.get():
@@ -390,6 +393,15 @@ class Game:
         self.paused = True
         bg = pygame.Surface([1024,768])
         bg.fill((173,216,230))
+
+        self.print_msg_to_screen('Score:', WHITE, bg, 'small', -HALF_WINDOW_WIDTH + 55, -HALF_WINDOW_HEIGHT + 20)
+        self.print_msg_to_screen(str(self.score), WHITE, bg, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
+        self.print_msg_to_screen('Paused', NAVY_BLUE, bg, 'large', 0, -200)
+        self.print_msg_to_screen('Resume', NAVY_BLUE, bg, 'large', 0, 0)
+        self.print_msg_to_screen('Main Menu', NAVY_BLUE, bg, 'large', 0, 100)
+        self.print_msg_to_screen('Quit', NAVY_BLUE, bg, 'large', 0, 200)
+
+
         bg_rect = bg.get_rect()
         pause_cursor = MenuCursor()
         pause_cursor.rect.x = 284
@@ -400,12 +412,6 @@ class Game:
         while self.paused:
             self.screen.blit(bg, bg_rect)
             self.screen.blit(pause_cursor.image, (pause_cursor.rect.x, pause_cursor.rect.y))
-            self.print_msg_to_screen('Score:', WHITE, 'small', -HALF_WINDOW_WIDTH + 55, -HALF_WINDOW_HEIGHT + 20)
-            self.print_msg_to_screen(str(self.score), WHITE, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
-            self.print_msg_to_screen('Paused', NAVY_BLUE, 'large', 0, -200)
-            self.print_msg_to_screen('Resume', NAVY_BLUE, 'large', 0, 0)
-            self.print_msg_to_screen('Main Menu', NAVY_BLUE, 'large', 0, 100)
-            self.print_msg_to_screen('Quit', NAVY_BLUE, 'large', 0, 200)
 
             keypressed = pygame.key.get_pressed()
             for event in pygame.event.get():
@@ -459,9 +465,9 @@ class Game:
 
     # function to display text messages on screen.
     # (creates a message that can be offset based off of the center of the window using dx and dy)
-    def print_msg_to_screen(self, msg, color, size='large', dx=0, dy=0):
+    def print_msg_to_screen(self, msg, color, surface, size='large', dx=0, dy=0):
         text_surface, text_rect = self.text_objects(msg, color, size)
         # => get_rect().center returns a rectangle covering the surface, in this case it's the text ones
         text_rect.center = (HALF_WINDOW_WIDTH + dx), (HALF_WINDOW_HEIGHT + dy)
-        self.screen.blit(text_surface, text_rect)
+        surface.blit(text_surface, text_rect)
         return [text_rect.left, text_rect.centery]
