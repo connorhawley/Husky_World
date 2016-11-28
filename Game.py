@@ -29,7 +29,7 @@ class Game:
         #print("Enemy platforms: ", len(self.enemy_platform_list))
         #print("Platforms:", len(self.platform_list))
         print("FPS:", self.printfps())
-        #print("(",self.player.rect.x,",",self.player.rect.y,")",'\n')
+        print("(",self.player.rect.x,",",self.player.rect.y,")",'\n')
         #print("Score:", self.score)
 
     def printfps(self):
@@ -209,6 +209,17 @@ class Game:
         self.total_level_width = len(Level().level[0]) * PLATFORM_WIDTH
         self.total_level_height = len(Level().level) * PLATFORM_HEIGHT
 
+    def fade(self):
+        blk = pygame.Surface(SIZE)
+        #self.paused = True
+        for i in range(255):
+            blk.fill(BLACK)
+            blk.set_alpha(i)
+            self.print_msg_to_screen('YOU DIED', WHITE, blk, 'large')
+            self.screen.blit(blk, (0, 0))
+            pygame.display.update(blk.get_rect())
+            pygame.time.delay(10)
+        #self.paused = False
 
     def draw(self):
         #set background to blue
@@ -248,18 +259,20 @@ class Game:
                         self.player.dy = -10
                         self.enemy_list.remove(e)
             else:
+                self.fade()
                 self.build_level(self.levels[self.current_level])
                 self.score -= 100
 
         if pygame.sprite.groupcollide(self.invincible_enemy_list, self.player_list, False, False):
-            self.score -= 100
+            self.fade()
             self.build_level(self.levels[self.current_level])
+            self.score -= 100
 
         #draw exit blocks to the screen. If player hits the block then go to next level.
         for exitblock in self.exit_blocks_list:
             self.screen.blit(exitblock.image, camera.apply(exitblock))
             if exitblock.rect.colliderect(self.player.rect):
-                if ((exitblock.rect.centerx - 32) - (self.player.rect.centerx - 32))  < 10:
+                if ((exitblock.rect.centerx - 32) - (self.player.rect.centerx - 32))  < 32:
                     if self.current_level + 2 > len(self.levels):
                         print("No next level.")
                     else:
@@ -280,8 +293,8 @@ class Game:
         for coin in self.coin_list:
             self.screen.blit(coin.image, camera.apply(coin))
 
-
         if pygame.sprite.groupcollide(self.kill_blocks_list, self.player_list, False, False):
+            self.fade()
             self.build_level(self.levels[self.current_level])
             self.score -= 100
 
@@ -298,8 +311,8 @@ class Game:
         pygame.sprite.groupcollide(self.player.ball_list, self.invincible_enemy_list, True, False)
 
         #+10 score if you kill enemy
-        for enemy in pygame.sprite.groupcollide(self.enemy_list, self.player.ball_list, True, True):
-              self.score += 10
+        if pygame.sprite.groupcollide(self.enemy_list, self.player.ball_list, True, True):
+            self.score += 10
 
 
         #self.print_msg_to_screen(self.printfps(), WHITE, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
@@ -317,6 +330,7 @@ class Game:
         #create menu surface
         bg = pygame.Surface(SIZE)
         bg.fill((173,216,230))
+        self.print_msg_to_screen('HUSKY WORLD', NAVY_BLUE, bg, 'extralarge', 0, -275)
         self.print_msg_to_screen('High Score:', NAVY_BLUE, bg, 'small', -300, 250)
         self.print_msg_to_screen(str(self.get_high_score()), NAVY_BLUE, bg, 'medium', -310, 300)
         self.print_msg_to_screen('Play', NAVY_BLUE, bg, 'large', 0, -100)
@@ -461,6 +475,9 @@ class Game:
             return text_surface, text_surface.get_rect()
         elif size == 'large':
             text_surface = LARGEFONT.render(msg, True, color)
+            return text_surface, text_surface.get_rect()
+        elif size == 'extralarge':
+            text_surface = XLFONT.render(msg, True, color)
             return text_surface, text_surface.get_rect()
 
     # function to display text messages on screen.

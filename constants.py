@@ -26,6 +26,7 @@ pygame.font.init()
 SMALLFONT = pygame.font.Font('data/fonts/uconn.ttf', 25)
 MEDIUMFONT = pygame.font.Font('data/fonts/uconn.ttf', 50)
 LARGEFONT = pygame.font.Font('data/fonts/uconn.ttf', 75)
+XLFONT = pygame.font.Font('data/fonts/uconn.ttf', 100)
 
 #Set FPS for game to run at
 FPS = 60
@@ -45,7 +46,6 @@ SPIKE = 'data/sprites/spike.png'
 SPIKE2 = 'data/sprites/spike2.png'
 
 HELP_MENU = 'data/sprites/help_menu.png'
-
 
 
 PLATFORM_WIDTH = 32
