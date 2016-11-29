@@ -145,11 +145,8 @@ class Game:
         self.jump_blocks_list.empty()
         self.exit_blocks_list.empty()
         self.kill_blocks_list.empty()
-<<<<<<< HEAD
-=======
         self.fake_blocks_list.empty()
         self.coin_list.empty()
->>>>>>> something
         self.enemy_list.empty()
         self.platform_list.empty()
         self.enemy_platform_list.empty()
