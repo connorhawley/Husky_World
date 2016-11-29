@@ -1,25 +1,26 @@
 from constants import *
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, type='normal', direction='left'):
         super().__init__()
-        self.image = pygame.Surface([32,32])
-        self.image.fill(RED)
-        self.image.convert_alpha()
+        if type == 'normal':
+            self.image = pygame.image.load(ENEMY_SPRITE).convert_alpha()
+        elif type == 'invincible':
+            self.image = pygame.image.load(ENEMY_SPIKE_SPRITE).convert_alpha()
+
         self.rect = self.image.get_rect()
         self.onGround = False
         self.rect.x = x
         self.rect.y = y
         self.dx = 0
         self.dy = 0
-        self.direction = 'left'
+        self.direction = direction
 
-    def move(self, platforms):
-
+    def update(self, platforms):
         if self.direction == 'left':
-            self.dx = -3
+            self.dx = -ENEMY_SPEED
         if self.direction == 'right':
-            self.dx = 3
+            self.dx = ENEMY_SPEED
 
         if not self.onGround:
             self.dy += GRAVITY
@@ -30,6 +31,7 @@ class Enemy(pygame.sprite.Sprite):
         self.onGround = False
         # collision for y axis
         self.collide(0, self.dy, platforms)
+
 
     def collide(self, dx, dy, platforms):
         for platform in platforms:
@@ -51,10 +53,9 @@ class Enemy(pygame.sprite.Sprite):
                     self.rect.top = platform.rect.bottom
                     self.dy += 2
 
-
     def jump(self):
         if self.onGround:
             self.dy -= 10
 
-    def draw(self, surface):
-        surface.blit(self.image, (self.rect.x, self.rect.y))
+
+
