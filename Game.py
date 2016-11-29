@@ -316,7 +316,7 @@ class Game:
             self.score += 10
 
 
-        self.print_msg_to_screen(self.printfps(), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
+        #self.print_msg_to_screen(self.printfps(), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
         self.print_msg_to_screen('Score:', WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH +55, -HALF_WINDOW_HEIGHT + 20)
         self.print_msg_to_screen(str(self.score), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
 
