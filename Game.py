@@ -7,6 +7,7 @@ from data.levels.Level00 import Level00
 from data.levels.Level01 import Level01
 from data.levels.Level02 import Level02
 
+import sys
 import threading
 from math import floor
 
@@ -28,8 +29,8 @@ class Game:
         threading.Timer(1.0, self.display_stats).start()
         #print("Enemy platforms: ", len(self.enemy_platform_list))
         #print("Platforms:", len(self.platform_list))
-        print("FPS:", self.printfps())
-        print("(",self.player.rect.x,",",self.player.rect.y,")",'\n')
+        #print("FPS:", self.printfps())
+        #print("(",self.player.rect.x,",",self.player.rect.y,")",'\n')
         #print("Score:", self.score)
 
     def printfps(self):
@@ -89,7 +90,7 @@ class Game:
             self.update()
             self.draw()
             self.fpsClock.tick(FPS)
-
+            print(self.player.dy)
 
     def handle_events(self):
         # handle game events
@@ -115,6 +116,7 @@ class Game:
                 else:
                     self.build_level(self.levels[self.current_level+1])
                     self.current_level += 1
+            # press n to noclip
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_n:
                     self.noclipping = not self.noclipping
@@ -315,7 +317,7 @@ class Game:
             self.score += 10
 
 
-        #self.print_msg_to_screen(self.printfps(), WHITE, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
+        self.print_msg_to_screen(self.printfps(), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
         self.print_msg_to_screen('Score:', WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH +55, -HALF_WINDOW_HEIGHT + 20)
         self.print_msg_to_screen(str(self.score), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
 
@@ -371,13 +373,13 @@ class Game:
                     at_menu_bottom = False
                     if keypressed[K_RETURN]:
                         pygame.quit()
+                        
                 if menu_cursor.rect.y == 459:
                      at_menu_top = False
                      at_menu_bottom = True
                      if keypressed[K_RETURN]:
                         main_menu_open = False
                         self.display_help_menu()
-
             pygame.display.update()
 
     #display the help menu
@@ -391,6 +393,7 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                    
                 if pygame.key.get_pressed()[K_ESCAPE]:
                     help_menu_open = False
                     self.display_main_menu()
@@ -431,6 +434,7 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                    
                 if keypressed[K_s]:
                     if at_menu_bottom:
                         pass
@@ -463,6 +467,7 @@ class Game:
                          if self.score > self.get_high_score():
                             self.save_high_score(self.score)
                          pygame.quit()
+                         
             pygame.display.update()
 
     #function to create text object on screen with specific message, color, size(Sizes specific in constants script)

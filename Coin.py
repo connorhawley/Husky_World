@@ -19,6 +19,5 @@ class Coin(pygame.sprite.Sprite):
         self.index = 0
 
 
-
     def update(self):
         self.image = pygame.image.load(self.images[int(time.time() * self.image_framerate % len(self.images))]).convert_alpha()
