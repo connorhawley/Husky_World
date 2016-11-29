@@ -90,7 +90,6 @@ class Game:
             self.update()
             self.draw()
             self.fpsClock.tick(FPS)
-            print(self.player.dy)
 
     def handle_events(self):
         # handle game events
