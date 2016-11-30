@@ -8,7 +8,7 @@ class MenuCursor(pygame.sprite.Sprite):
         self.image = pygame.image.load(MENU_SELECT_SPRITE)
         self.rect = self.image.get_rect()
         self.rect.x = 340
-        self.rect.y = 259
+        self.rect.y = 359
 
 
     def moveUp(self):

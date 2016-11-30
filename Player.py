@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
         self.image_framerate = 7
         self.image_count = len(self.left_images)
-        self.ball_list = []
+        self.ball_list = pygame.sprite.Group()
         self.last_time = pygame.time.get_ticks() #get time in milliseconds
 
 

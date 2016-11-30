@@ -3,12 +3,12 @@ from MenuCursor import MenuCursor
 from Platform import *
 from Coin import Coin
 from Enemy import Enemy
+from Player import Player
 from data.levels.Level00 import Level00
 from data.levels.Level01 import Level01
 from data.levels.Level02 import Level02
 
-import sys
-import threading
+import threading, pickle, shelve
 from math import floor
 
 
@@ -79,7 +79,7 @@ class Game:
         self.levels = [Level00, Level01, Level02] #list of levels
         self.display_main_menu()
         self.build_level(self.levels[self.current_level])  #starting level
-        self.display_stats()
+       # self.display_stats()
         self.run_game_loop()
 
 
@@ -90,7 +90,6 @@ class Game:
             self.update()
             self.draw()
             self.fpsClock.tick(FPS)
-            print(self.player.dy)
 
     def handle_events(self):
         # handle game events
@@ -116,6 +115,19 @@ class Game:
                 else:
                     self.build_level(self.levels[self.current_level+1])
                     self.current_level += 1
+            # if pygame.key.get_pressed()[K_KP5]:
+            #     self.save(self.player, self.enemy_list, self.invincible_enemy_list, self.coin_list, self.current_level)
+            #
+            # if pygame.key.get_pressed()[K_KP2]:
+            #     self.player2, self.enemy_list, self.invincible_enemy_list, self.coin_list, self.current_level = self.load()
+            #     self.resume_level(self.levels[self.current_level])
+            #     self.player.image = Player(0,0).image
+            #     self.player.rect = self.player2.rect
+            #     for e in self.enemy_list: e.image = Enemy(e.rect.x, e.rect.y).image
+            #     for e in self.invincible_enemy_list: e.image = Enemy(e.rect.x, e.rect.y, 'invincible').image
+            #     for c in self.coin_list: c.image = Coin(c.rect.x, c.rect.y).image
+
+
             # press n to noclip
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_n:
@@ -123,7 +135,6 @@ class Game:
 
     def update(self):
         #call update functions on lists
-
         if self.noclipping == False:
             self.player_list.update(self.platform_list)
         else:
@@ -134,6 +145,89 @@ class Game:
         self.invincible_enemy_list.update(self.enemy_platform_list)
         self.coin_list.update()
 
+    #
+    # def save(self, player ,enemies, invenemies, coins, level):
+    #     f = shelve.open("save.bin")
+    #     for p in self.player_list: p.image = None
+    #     for e in self.enemy_list: e.image = None
+    #     for e in self.invincible_enemy_list: e.image = None
+    #     for e in self.coin_list: e.image = None
+    #     f['player'] = player
+    #     f['enemies'] = enemies
+    #     f['invenemies'] = invenemies
+    #     f['coins'] = coins
+    #     f['level'] = level
+    #     f.close()
+    #     self.new_game()
+    #
+    # def load(self):
+    #     try:
+    #         f = shelve.open("save.bin")
+    #         return f['player'], f['enemies'], f['invenemies'], f['coins'], f['level']
+    #     except KeyError:
+    #         return None
+    #     finally:
+    #         f.close()
+    #
+    # def resume_level(self, Level):
+    #         # build the level
+    #         self.player_list.empty()
+    #         self.player = Level().player
+    #         self.platform_list.empty()
+    #         self.jump_blocks_list.empty()
+    #         self.exit_blocks_list.empty()
+    #         self.kill_blocks_list.empty()
+    #         self.fake_blocks_list.empty()
+    #         self.platform_list.empty()
+    #         self.player_list.add(self.player)
+    #         self.player.ball_list = pygame.sprite.Group()
+    #         self.invincible_enemy_list.empty()
+    #
+    #         x = y = 0
+    #         for row in Level().level:
+    #             for col in row:
+    #                 if col == "P":
+    #                     p = Platform(x, y)
+    #                     self.platform_list.add(p)
+    #                     #self.enemy_platform_list.add(p)
+    #                 if col == "R":
+    #                     r = EnemyPlatform(x, y)
+    #                     self.platform_list.add(r)
+    #                     self.enemy_platform_list.add(r)
+    #                 if col == "X":
+    #                     e = ExitBlock(x, y)
+    #                     self.exit_blocks_list.add(e)
+    #                 if col == "J":
+    #                     j = JumpBlock(x, y)
+    #                     self.jump_blocks_list.add(j)
+    #                 if col == "S":
+    #                     s = Structure(x, y)
+    #                     self.platform_list.add(s)
+    #                 if col == "Q":
+    #                     q = EnemyStructure(x, y)
+    #                     self.platform_list.add(q)
+    #                     self.enemy_platform_list.add(q)
+    #                 if col == "K":
+    #                     k = KillBlock(x, y)
+    #                     self.kill_blocks_list.add(k)
+    #                     # self.enemy_platform_list.add(k)
+    #                 if col == "I":
+    #                     i = InvisibleBlock(x, y)
+    #                     self.enemy_platform_list.add(i)
+    #                 if col == "B":
+    #                     b = Brick(x, y)
+    #                     self.platform_list.add(b)
+    #                     # self.enemy_platform_list.add(b)
+    #                 if col == "U":
+    #                     u = KillBlock2(x, y)
+    #                     self.kill_blocks_list.add(u)
+    #                     self.enemy_platform_list.add(u)
+    #                 if col == "F":
+    #                     f = FakePlatform(x, y)
+    #                     self.fake_blocks_list.add(f)
+    #                 x += PLATFORM_WIDTH
+    #             y += PLATFORM_HEIGHT
+    #             x = 0
 
     def build_level(self, Level):
         # build the level
@@ -257,15 +351,18 @@ class Game:
                 for e in enemies:
                     if e.rect.top+32 > self.player.rect.bottom:
                         #print(e.rect.top, self.player.rect.bottom)
+
                         self.score += 10
                         self.player.dy = -10
                         self.enemy_list.remove(e)
             else:
+                self.screen.fill((173,216,230))
                 self.fade()
                 self.build_level(self.levels[self.current_level])
                 self.score -= 100
 
         if pygame.sprite.groupcollide(self.invincible_enemy_list, self.player_list, False, False):
+            self.screen.fill((173, 216, 230))
             self.fade()
             self.build_level(self.levels[self.current_level])
             self.score -= 100
@@ -296,6 +393,7 @@ class Game:
             self.screen.blit(coin.image, camera.apply(coin))
 
         if pygame.sprite.groupcollide(self.kill_blocks_list, self.player_list, False, False):
+            self.screen.fill((173, 216, 230))
             self.fade()
             self.build_level(self.levels[self.current_level])
             self.score -= 100
@@ -317,7 +415,7 @@ class Game:
             self.score += 10
 
 
-        self.print_msg_to_screen(self.printfps(), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH+50, -HALF_WINDOW_HEIGHT+100)
+        self.print_msg_to_screen('fps: '+self.printfps(), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH+60, -HALF_WINDOW_HEIGHT+70)
         self.print_msg_to_screen('Score:', WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH +55, -HALF_WINDOW_HEIGHT + 20)
         self.print_msg_to_screen(str(self.score), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
 
@@ -332,14 +430,15 @@ class Game:
         #create menu surface
         bg = pygame.Surface(SIZE)
         bg.fill((173,216,230))
-        self.print_msg_to_screen('HUSKY WORLD', NAVY_BLUE, bg, 'extralarge', 0, -275)
+
+        self.print_msg_to_screen('SUPER', NAVY_BLUE, bg, 'extralarge', 0, -300)
+        self.print_msg_to_screen('HUSKY WORLD', NAVY_BLUE, bg, 'extralarge', 0, -215)
         self.print_msg_to_screen('High Score:', NAVY_BLUE, bg, 'small', -300, 250)
         self.print_msg_to_screen(str(self.get_high_score()), NAVY_BLUE, bg, 'medium', -310, 300)
-        self.print_msg_to_screen('Play', NAVY_BLUE, bg, 'large', 0, -100)
-        self.print_msg_to_screen('Quit', NAVY_BLUE, bg, 'large', 0, 0)
-        self.print_msg_to_screen('Help', NAVY_BLUE, bg, 'large', 0, 100)
+        self.print_msg_to_screen('Play', NAVY_BLUE, bg, 'large', 0, 0)
+        self.print_msg_to_screen('Quit', NAVY_BLUE, bg, 'large', 0, 100)
+        self.print_msg_to_screen('Help', NAVY_BLUE, bg, 'large', 0, 200)
         bg_rect = bg.get_rect()
-
 
         # create mouse cursor arrow
         menu_cursor = MenuCursor()
@@ -361,20 +460,20 @@ class Game:
                         pass
                     else:
                         menu_cursor.moveUp()
-                    #259 is the center y coordinate of the Play text
-                if menu_cursor.rect.y == 259:
+                    #259 is the center y coordinate of the Play option
+                if menu_cursor.rect.y == 359:
                     at_menu_bottom = False
                     at_menu_top = True
                     if keypressed[K_RETURN]:
                         main_menu_open = False
-                    #459 is the center y coordinate of the quit text
-                if menu_cursor.rect.y == 359:
+                    #359 is the center y coordinate of the quit option
+                if menu_cursor.rect.y == 459:
                     at_menu_top = False
                     at_menu_bottom = False
                     if keypressed[K_RETURN]:
                         pygame.quit()
-                        
-                if menu_cursor.rect.y == 459:
+                    #459 is the center y coordinate of the Help option
+                if menu_cursor.rect.y == 559:
                      at_menu_top = False
                      at_menu_bottom = True
                      if keypressed[K_RETURN]:
@@ -403,7 +502,6 @@ class Game:
     def display_game_over_screen(self):
         #display the game over screen
         pass
-
 
     def pause(self):
         #pause the game when escape key is pressed

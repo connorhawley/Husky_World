@@ -35,7 +35,7 @@ FPS = 60
 HUSKY_SPRITES = 'data/sprites/husky_sprites.png'
 MENU_SELECT_SPRITE = 'data/sprites/menu_select_sprite.png'
 BALL_SPRITE = 'data/sprites/ball.png'
-ENEMY_SPRITE = 'data/sprites/enemy.png'
+ENEMY_SPRITE = 'data/sprites/enemy4.png'
 ENEMY_SPIKE_SPRITE = 'data/sprites/enemy2.png'
 
 HUSKY_WORLD_BRICK = 'data/levels/Husky_World_Brick.png'
