@@ -353,6 +353,8 @@ class Game:
                         self.score += 10
                         self.player.dy = -10
                         self.enemy_list.remove(e)
+                        pygame.mixer.music.load("data/Audio/Jump_on_enemy")
+                        pygame.mixer.music.play(1, 0)
             else:
                 self.screen.fill((173,216,230))
                 self.fade()
@@ -376,6 +378,9 @@ class Game:
                         self.current_level += 1
                         self.score += 100
                         self.build_level(self.levels[self.current_level])
+                        pygame.mixer.music.load("data/Audio/Level_dunk.wav")
+                        pygame.mixer.music.play(1, 0)
+
 
         # draw the player to screen and apply camera to them
         for player in self.player_list:
@@ -399,6 +404,9 @@ class Game:
         #+200 score if you get a coin
         if pygame.sprite.groupcollide(self.player_list, self.coin_list, False, True):
             self.score += 200
+            pygame.mixer.music.load("data/Audio/Coin")
+            pygame.mixer.music.play(1, 0)
+
 
         #draw all basketballs to the screen and apply camera, and check for collison
         #if ball hits platform, delete ball. if hits enenmy, delete enemy & ball
@@ -411,6 +419,8 @@ class Game:
         #+10 score if you kill enemy
         if pygame.sprite.groupcollide(self.enemy_list, self.player.ball_list, True, True):
             self.score += 10
+            pygame.mixer.music.load("data/Audio/Jump_on_enemy")
+            pygame.mixer.music.play(1, 0)
 
         #print score and fps in top right corner.
         self.print_msg_to_screen('fps: '+self.printfps(), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH+60, -HALF_WINDOW_HEIGHT+70)

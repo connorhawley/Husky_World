@@ -47,8 +47,8 @@ class Player(pygame.sprite.Sprite):
                 self.dy -= JUMP_HEIGHT
                 self.onGround = False
                 self.jumping = True
-#                pygame.mixer.music.load("data/Audio/Jump.wav")
-#                pygame.mixer.music.play(1, 0)
+                pygame.mixer.music.load("data/Audio/Jump.bfxrsound")
+                pygame.mixer.music.play(1, 0)
             if key[pygame.K_a]:
                 self.move_left()
             if key[pygame.K_d]:
@@ -66,12 +66,12 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_SPACE]:
             if self.walkingLeft:
                 self.shoot('left')
-                #pygame.mixer.music.load("data/Audio/Basketball Dribbling Sound EffectHD.wav")
-                #pygame.mixer.music.play(1, 0)
+                pygame.mixer.music.load("data/Audio/Whoosh.wav")
+                pygame.mixer.music.play(1, 0)
             if self.walkingRight:
                 self.shoot('right')
-                #pygame.mixer.music.load("data/Audio/Basketball Dribbling Sound EffectHD.wav")
-                #pygame.mixer.music.play(1, 0)
+                pygame.mixer.music.load("data/Audio/Whoosh.wav")
+                pygame.mixer.music.play(1, 0)
 
         if self.walkingLeft:  # if walking left, then animate the player sprite
             if key[pygame.K_a]:
