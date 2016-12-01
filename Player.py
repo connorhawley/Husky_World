@@ -66,12 +66,12 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_SPACE]:
             if self.walkingLeft:
                 self.shoot('left')
-                pygame.mixer.music.load("data/Audio/Whoosh.wav")
-                pygame.mixer.music.play(1, 0)
+               # pygame.mixer.music.load("data/Audio/Whoosh.wav")
+               # pygame.mixer.music.play(1, 0)
             if self.walkingRight:
                 self.shoot('right')
-                pygame.mixer.music.load("data/Audio/Whoosh.wav")
-                pygame.mixer.music.play(1, 0)
+                #pygame.mixer.music.load("data/Audio/Whoosh.wav")
+               # pygame.mixer.music.play(1, 0)
 
         if self.walkingLeft:  # if walking left, then animate the player sprite
             if key[pygame.K_a]:
@@ -130,6 +130,8 @@ class Player(pygame.sprite.Sprite):
             else:
                 ball.rect.x = self.rect.right           #spawn the ball at the top right of the player
             ball.rect.y = self.rect.top
+            pygame.mixer.music.load("data/Audio/Whoosh.wav")
+            pygame.mixer.music.play(1, 0)
 
     def move_right(self):
         self.dx = PLAYER_SPEED
