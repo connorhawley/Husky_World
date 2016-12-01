@@ -8,31 +8,31 @@ class Entity(pygame.sprite.Sprite):
 class Platform(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load(HUSKY_WORLD_WOOD).convert_alpha()
+        self.image = HUSKY_WORLD_WOOD
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 class EnemyPlatform(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load(HUSKY_WORLD_WOOD).convert_alpha()
+        self.image = HUSKY_WORLD_WOOD
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 class FakePlatform(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load(HUSKY_WORLD_WOOD).convert_alpha()
+        self.image = HUSKY_WORLD_WOOD
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 class Structure(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load(HUSKY_WORLD_STRUCTURE).convert_alpha()
+        self.image = HUSKY_WORLD_STRUCTURE
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 class EnemyStructure(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load(HUSKY_WORLD_STRUCTURE).convert_alpha()
+        self.image = HUSKY_WORLD_STRUCTURE
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 class JumpBlock(Entity):
@@ -44,19 +44,19 @@ class JumpBlock(Entity):
 class ExitBlock(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load('data/sprites/hoop.png').convert_alpha()
+        self.image = EXIT_HOOP
         self.rect = Rect(x-128, y-234, 160, 266)
 
 class KillBlock(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load(SPIKE).convert_alpha()
+        self.image = SPIKE
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 class KillBlock2(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load(SPIKE2).convert_alpha()
+        self.image = SPIKE2
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 class InvisibleBlock(Entity):
@@ -68,5 +68,5 @@ class InvisibleBlock(Entity):
 class Brick(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
-        self.image = pygame.image.load(HUSKY_WORLD_BRICK).convert_alpha()
+        self.image = HUSKY_WORLD_BRICK
         self.rect = Rect(x, y, PLATFORM_WIDTH, PLATFORM_HEIGHT)

@@ -3,7 +3,6 @@ from MenuCursor import MenuCursor
 from Platform import *
 from Coin import Coin
 from Enemy import Enemy
-from Player import Player
 from data.levels.Level00 import Level00
 from data.levels.Level01 import Level01
 from data.levels.Level02 import Level02
@@ -101,7 +100,7 @@ class Game:
                     self.gameRunning = False
                     pygame.quit()
             if pygame.key.get_pressed()[K_ESCAPE]:
-                self.pause()
+                self.display_pause_menu()
             #for testing purposes, pressing K/L goes to previous or next level
             if pygame.key.get_pressed()[K_k]:
                 if self.current_level-1 < 0:
@@ -338,7 +337,6 @@ class Game:
             if pygame.sprite.spritecollideany(enemy, self.jump_blocks_list):
                 enemy.jump()
 
-
         # draw the invincible enemies to screen and apply camera to them. If enemy touches jump block then the enemy will jump
         for enemy in self.invincible_enemy_list:
             self.screen.blit(enemy.image, camera.apply(enemy))
@@ -414,7 +412,7 @@ class Game:
         if pygame.sprite.groupcollide(self.enemy_list, self.player.ball_list, True, True):
             self.score += 10
 
-
+        #print score and fps in top right corner.
         self.print_msg_to_screen('fps: '+self.printfps(), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH+60, -HALF_WINDOW_HEIGHT+70)
         self.print_msg_to_screen('Score:', WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH +55, -HALF_WINDOW_HEIGHT + 20)
         self.print_msg_to_screen(str(self.score), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH + 150, -HALF_WINDOW_HEIGHT + 20)
@@ -429,21 +427,31 @@ class Game:
         at_menu_top = True
         #create menu surface
         bg = pygame.Surface(SIZE)
-        bg.fill((173,216,230))
+        pic = MAIN_MENU
+        bg.blit(pic, (0,0))
 
-        self.print_msg_to_screen('SUPER', NAVY_BLUE, bg, 'extralarge', 0, -300)
-        self.print_msg_to_screen('HUSKY WORLD', NAVY_BLUE, bg, 'extralarge', 0, -215)
-        self.print_msg_to_screen('High Score:', NAVY_BLUE, bg, 'small', -300, 250)
-        self.print_msg_to_screen(str(self.get_high_score()), NAVY_BLUE, bg, 'medium', -310, 300)
-        self.print_msg_to_screen('Play', NAVY_BLUE, bg, 'large', 0, 0)
-        self.print_msg_to_screen('Quit', NAVY_BLUE, bg, 'large', 0, 100)
-        self.print_msg_to_screen('Help', NAVY_BLUE, bg, 'large', 0, 200)
+        #blit all of the menu texts to the screen
+        bg.blit(self.textOutline(XLFONT, 'SUPER', NAVY_BLUE, WHITE), (338,30))
+        bg.blit(self.textOutline(XLFONT, 'HUSKY WORLD', NAVY_BLUE, WHITE,), (138, 115))
+        bg.blit(self.textOutline(LARGEFONT, 'Play', NAVY_BLUE, WHITE), (HALF_WINDOW_WIDTH - 103, HALF_WINDOW_HEIGHT - 40))
+        bg.blit(self.textOutline(LARGEFONT, 'Quit', NAVY_BLUE, WHITE), (HALF_WINDOW_WIDTH - 89, HALF_WINDOW_HEIGHT + 60))
+        bg.blit(self.textOutline(LARGEFONT, 'Help', NAVY_BLUE, WHITE), (HALF_WINDOW_WIDTH - 103, HALF_WINDOW_HEIGHT + 160))
+        bg.blit(self.textOutline(MEDIUMFONT, 'High Score:', NAVY_BLUE, WHITE), (45, 623))
+        bg.blit(self.textOutline(MEDIUMFONT, str(self.get_high_score()), NAVY_BLUE, WHITE), (133, 700))
+        #self.print_msg_to_screen('SUPER', NAVY_BLUE, bg, 'extralarge', 0, -300)
+        #self.print_msg_to_screen('HUSKY WORLD', NAVY_BLUE, bg, 'extralarge', 0, -215)
+        #self.print_msg_to_screen('Play', NAVY_BLUE, bg, 'large', 0, 0)
+        #self.print_msg_to_screen('Quit', NAVY_BLUE, bg, 'large', 0, 100)
+        #self.print_msg_to_screen('Help', NAVY_BLUE, bg, 'large', 0, 200)
+        #self.print_msg_to_screen('High Score:', NAVY_BLUE, bg, 'small', -300, 250)
+
         bg_rect = bg.get_rect()
 
         # create mouse cursor arrow
         menu_cursor = MenuCursor()
         while main_menu_open:
             #draw menu arrow cursor on the screen
+            #print(pygame.mouse.get_pos())
             self.screen.blit(bg, bg_rect)
             menu_cursor.draw(self.screen)
             keypressed = pygame.key.get_pressed()
@@ -484,7 +492,7 @@ class Game:
     #display the help menu
     def display_help_menu(self):
         help_menu_open = True
-        menu_image = pygame.image.load(HELP_MENU).convert_alpha()
+        menu_image = HELP_MENU
         menu_rect = menu_image.get_rect()
 
         while help_menu_open:
@@ -498,12 +506,13 @@ class Game:
                     self.display_main_menu()
             pygame.display.update()
 
-
+    #display game over screen
     def display_game_over_screen(self):
         #display the game over screen
         pass
 
-    def pause(self):
+    #display pause menu when escape is pressed
+    def display_pause_menu(self):
         #pause the game when escape key is pressed
         self.paused = True
         bg = pygame.Surface([1024,768])
@@ -567,6 +576,35 @@ class Game:
                          pygame.quit()
                          
             pygame.display.update()
+
+
+    #create hollow text
+    def textHollow(self, font, message, fontcolor):
+        notcolor = [c ^ 0xFF for c in fontcolor]
+        base = font.render(message, 0, fontcolor, notcolor)
+        size = base.get_width() + 2, base.get_height() + 2
+        img = pygame.Surface(size, 16)
+        img.fill(notcolor)
+        base.set_colorkey(0)
+        img.blit(base, (0, 0))
+        img.blit(base, (2, 0))
+        img.blit(base, (0, 2))
+        img.blit(base, (2, 2))
+        base.set_colorkey(0)
+        base.set_palette_at(1, notcolor)
+        img.blit(base, (1, 1))
+        img.set_colorkey(notcolor)
+        return img
+
+    #create outlined text
+    def textOutline(self, font, message, fontcolor, outlinecolor):
+        base = font.render(message, 0, fontcolor)
+        outline = self.textHollow(font, message, outlinecolor)
+        img = pygame.Surface(outline.get_size(), 16)
+        img.blit(base, (1, 1))
+        img.blit(outline, (0, 0))
+        img.set_colorkey(0)
+        return img
 
     #function to create text object on screen with specific message, color, size(Sizes specific in constants script)
     def text_objects(self, msg, color, size):

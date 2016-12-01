@@ -1,5 +1,5 @@
 from constants import *
-import time
+import time, os
 
 class Coin(pygame.sprite.Sprite):
     def __init__(self,x ,y):
@@ -9,7 +9,12 @@ class Coin(pygame.sprite.Sprite):
                        'data/sprites/coins/goldCoin7.png', 'data/sprites/coins/goldCoin8.png', 'data/sprites/coins/goldCoin9.png',
                        'data/sprites/coins/goldCoin10.png']
 
-        self.image = pygame.image.load(self.images[0]).convert_alpha()
+
+        self.imagelist = []
+        for image in self.images:
+            self.imagelist.append(pygame.image.load(image).convert_alpha())
+
+        self.image = self.imagelist[0]
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -20,4 +25,4 @@ class Coin(pygame.sprite.Sprite):
 
 
     def update(self):
-        self.image = pygame.image.load(self.images[int(time.time() * self.image_framerate % len(self.images))]).convert_alpha()
+        self.image = self.imagelist[int(time.time() * self.image_framerate % len(self.images))].convert_alpha()

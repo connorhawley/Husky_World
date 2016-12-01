@@ -22,7 +22,10 @@ BLACK = (0,0,0)
 NAVY_BLUE = (0,14,47)
 
 #Fonts
+pygame.init()
 pygame.font.init()
+pygame.mixer.init()
+pygame.display.set_mode(SIZE)
 SMALLFONT = pygame.font.Font('data/fonts/uconn.ttf', 25)
 MEDIUMFONT = pygame.font.Font('data/fonts/uconn.ttf', 50)
 LARGEFONT = pygame.font.Font('data/fonts/uconn.ttf', 75)
@@ -32,20 +35,22 @@ XLFONT = pygame.font.Font('data/fonts/uconn.ttf', 100)
 FPS = 60
 #set path for sprites
 
-HUSKY_SPRITES = 'data/sprites/husky_sprites.png'
-MENU_SELECT_SPRITE = 'data/sprites/menu_select_sprite.png'
-BALL_SPRITE = 'data/sprites/ball.png'
-ENEMY_SPRITE = 'data/sprites/enemy4.png'
-ENEMY_SPIKE_SPRITE = 'data/sprites/enemy2.png'
+HUSKY_SPRITES = pygame.image.load('data/sprites/husky_sprites.png').convert_alpha()
+MENU_SELECT_SPRITE = pygame.image.load('data/sprites/menu_select_sprite.png').convert_alpha()
+BALL_SPRITE = pygame.image.load('data/sprites/ball.png').convert_alpha()
+ENEMY_SPRITE = pygame.image.load('data/sprites/enemy4.png').convert_alpha()
+ENEMY_SPIKE_SPRITE = pygame.image.load('data/sprites/enemy2.png').convert_alpha()
 
-HUSKY_WORLD_BRICK = 'data/levels/Husky_World_Brick.png'
-HUSKY_WORLD_WOOD = 'data/levels/Husky_World_Wood.png'
-HUSKY_WORLD_STRUCTURE = 'data/levels/Husky_World_Structure.png'
+HUSKY_WORLD_BRICK = pygame.image.load('data/levels/Husky_World_Brick.png').convert_alpha()
+HUSKY_WORLD_WOOD = pygame.image.load('data/levels/Husky_World_Wood.png').convert_alpha()
+HUSKY_WORLD_STRUCTURE = pygame.image.load('data/levels/Husky_World_Structure.png').convert_alpha()
 
-SPIKE = 'data/sprites/spike.png'
-SPIKE2 = 'data/sprites/spike2.png'
+EXIT_HOOP = pygame.image.load('data/sprites/hoop.png').convert_alpha()
 
-HELP_MENU = 'data/sprites/help_menu.png'
+SPIKE = pygame.image.load('data/sprites/spike.png').convert_alpha()
+SPIKE2 = pygame.image.load('data/sprites/spike2.png').convert_alpha()
+HELP_MENU = pygame.image.load('data/sprites/help_menu.png').convert_alpha()
+MAIN_MENU = pygame.image.load('data/sprites/main_menu.png').convert_alpha()
 
 
 PLATFORM_WIDTH = 32

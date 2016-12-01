@@ -4,9 +4,9 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, type='normal', direction='left'):
         super().__init__()
         if type == 'normal':
-            self.image = pygame.image.load(ENEMY_SPRITE).convert_alpha()
+            self.image = ENEMY_SPRITE
         elif type == 'invincible':
-            self.image = pygame.image.load(ENEMY_SPIKE_SPRITE).convert_alpha()
+            self.image = ENEMY_SPIKE_SPRITE
 
         self.rect = self.image.get_rect()
         self.onGround = False

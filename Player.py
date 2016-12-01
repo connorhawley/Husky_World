@@ -11,15 +11,23 @@ class Player(pygame.sprite.Sprite):
 
         self.left_images = self.create_sprite_sheet((72,48), 'data/sprites/husky_sprites.png', (0,0))
         self.right_images = self.create_sprite_sheet((72,48), 'data/sprites/husky_sprites.png', (0,48))
-        self.jump_left_images = ['data/sprites/jumping/jumpingleft.png', 'data/sprites/jumping/midairleft.png',
-                                 'data/sprites/jumping/landingleft.png']
-        self.jump_right_images =['data/sprites/jumping/jumpingright.png', 'data/sprites/jumping/midairright.png',
-                                 'data/sprites/jumping/landingright.png']
+        self.jump_left_images_unloaded = ['data/sprites/jumping/jumpingleft.png', 'data/sprites/jumping/midairleft.png',
+                                         'data/sprites/jumping/landingleft.png']
+        self.jump_left_images = []
+        for image in self.jump_left_images_unloaded:
+            self.jump_left_images.append(pygame.image.load(image).convert_alpha())
+
+        self.jump_right_images_unloaded =['data/sprites/jumping/jumpingright.png', 'data/sprites/jumping/midairright.png',
+                                         'data/sprites/jumping/landingright.png']
+        self.jump_right_images = []
+        for image in self.jump_right_images_unloaded:
+            self.jump_right_images.append(pygame.image.load(image).convert_alpha())
+
         self.right_images.reverse()
         self.rect = self.right_images[0].get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.image = self.right_images[2].convert_alpha()
+        self.image = self.right_images[2]
         self.onGround = False
         self.jumping = False
         self.walkingLeft = False
@@ -68,31 +76,31 @@ class Player(pygame.sprite.Sprite):
         if self.walkingLeft:  # if walking left, then animate the player sprite
             if key[pygame.K_a]:
                 self.image = self.left_images[int(
-                    time.time() * self.image_framerate % self.image_count)].convert_alpha()  # limits animation framerate
+                    time.time() * self.image_framerate % self.image_count)]  # limits animation framerate
             if not key[pygame.K_a]:
-                self.image = self.left_images[2].convert_alpha()
+                self.image = self.left_images[2]
             if self.jumping:
                 if self.dy > 0.5:
-                    self.image = pygame.image.load(self.jump_left_images[2]).convert_alpha()
+                    self.image = self.jump_left_images[2]
                 elif -5 <= self.dy <= 5:
-                    self.image = pygame.image.load(self.jump_left_images[1]).convert_alpha()
+                    self.image = self.jump_left_images[1]
                 else:
-                    self.image = pygame.image.load(self.jump_left_images[0]).convert_alpha()
+                    self.image = self.jump_left_images[0]
 
 
         if self.walkingRight:  # if walking right, then animate the player sprite
             if key[pygame.K_d]:
                 self.image = self.right_images[int(
-                    time.time() * self.image_framerate % self.image_count)].convert_alpha()  # limits animation framerate
+                    time.time() * self.image_framerate % self.image_count)]  # limits animation framerate
             if not key[pygame.K_d]:  # if not pressing key then return to standing position sprite
-                self.image = self.right_images[2].convert_alpha()
+                self.image = self.right_images[2]
             if self.jumping:
                 if self.dy > 0.5:
-                    self.image = pygame.image.load(self.jump_right_images[2]).convert_alpha()
+                    self.image = self.jump_right_images[2]
                 elif -5 <= self.dy <= 5:
-                    self.image = pygame.image.load(self.jump_right_images[1]).convert_alpha()
+                    self.image = self.jump_right_images[1]
                 else:
-                    self.image = pygame.image.load(self.jump_right_images[0]).convert_alpha()
+                    self.image = self.jump_right_images[0]
 
         if self.onGround == False:   #if not on the ground then apply gravity
             self.dy += GRAVITY
