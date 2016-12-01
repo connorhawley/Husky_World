@@ -92,7 +92,7 @@ class Level02(Level):
 "P        B   B          SSSS                                              PPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPP                        PPFFFFFFFFFFFFFFFPPP                      PPPP                    P",
 "P        B   B                              PPPP                         PPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPP                        PFFFFFFFFFFFFFFFPPP                     PPPP               C S   P",
 "P        B   B    SSSS                      PPPP                        PPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPP                        PPPPPPPPPPPPPPPPPP    PPPPPPPPPPPPPPPPPPP                  SS   P",
-"P     SSSB   B                              PPPPPP                     PPPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPPP                                       PP                                        SSSSSSP",
+"P     SSSB   B                              PPPPPP                     PPPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPPP                                       PP    IIIIIIIIIIIIIIIIIII                 SSSSSSP",
 "P        B   B                              PPPPPP                    PPPPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPPPP                                      PP                                         SS   P",
 "P   C    B   B                              PPPPPPPR   E       E    IPPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPPPPP                                     PP                                          S   P",
 "R   Z   IB   PPPPPPPPPPPPPPPPPPPPP          PPPPPPPR       J        RPPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPPPPPP                                    PR       Z   J     Z    J      Z                R",
