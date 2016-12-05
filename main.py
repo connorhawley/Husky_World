@@ -1,7 +1,5 @@
-from constants import *
+import pygame
 from Game import Game
-
-#create game object and runs it
 
 game = Game()
 

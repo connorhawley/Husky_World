@@ -16,7 +16,7 @@ class Game:
         #initialize the game screen(set size, title, etc)
         pygame.init()
         pygame.mixer.init()
-        self.screen = pygame.display.set_mode(SIZE)
+        self.screen = SCREEN
         pygame.display.set_caption(TITLE)
         self.fpsClock = pygame.time.Clock()
         self.gameRunning = True
@@ -31,6 +31,7 @@ class Game:
         #print("FPS:", self.printfps())
         #print("(",self.player.rect.x,",",self.player.rect.y,")",'\n')
         #print("Score:", self.score)
+        #print(self.score, self.level_score)
 
     def printfps(self):
         return str(floor(self.fpsClock.get_fps()))
@@ -74,6 +75,7 @@ class Game:
         self.kill_blocks_list = pygame.sprite.Group()
         self.coin_list = pygame.sprite.Group()
         self.score = 0
+        self.level_score = 0
         self.current_level = 0
         self.levels = [Level00, Level01, Level02] #list of levels
         self.display_main_menu()
@@ -230,6 +232,7 @@ class Game:
 
     def build_level(self, Level):
         # build the level
+        self.level_score = 0
         self.player_list.empty()
         self.player = Level().player
         self.player_list.add(self.player)
@@ -349,21 +352,25 @@ class Game:
                 for e in enemies:
                     if e.rect.top+32 > self.player.rect.bottom:
                         #print(e.rect.top, self.player.rect.bottom)
-
                         self.score += 10
+                        self.level_score += 10
                         self.player.dy = -10
                         self.enemy_list.remove(e)
+                        pygame.mixer.music.load("data/Audio/Jump_on_enemy.wav")
+                        pygame.mixer.music.play(1, 0)
             else:
                 self.screen.fill((173,216,230))
                 self.fade()
+                self.score -= 100 + self.level_score
                 self.build_level(self.levels[self.current_level])
-                self.score -= 100
+
 
         if pygame.sprite.groupcollide(self.invincible_enemy_list, self.player_list, False, False):
             self.screen.fill((173, 216, 230))
             self.fade()
+            self.score -= 100 + self.level_score
             self.build_level(self.levels[self.current_level])
-            self.score -= 100
+
 
         #draw exit blocks to the screen. If player hits the block then go to next level.
         for exitblock in self.exit_blocks_list:
@@ -375,7 +382,10 @@ class Game:
                     else:
                         self.current_level += 1
                         self.score += 100
+                        self.level_score += 100
                         self.build_level(self.levels[self.current_level])
+                        pygame.mixer.music.load("data/Audio/Level_dunk.wav")
+                        pygame.mixer.music.play(1, 0)
 
         # draw the player to screen and apply camera to them
         for player in self.player_list:
@@ -393,17 +403,22 @@ class Game:
         if pygame.sprite.groupcollide(self.kill_blocks_list, self.player_list, False, False):
             self.screen.fill((173, 216, 230))
             self.fade()
+            self.score -= 100 + self.level_score
             self.build_level(self.levels[self.current_level])
-            self.score -= 100
+
 
         #+200 score if you get a coin
         if pygame.sprite.groupcollide(self.player_list, self.coin_list, False, True):
             self.score += 200
+            self.level_score += 200
+            pygame.mixer.music.load('data/Audio/Coin')
+            pygame.mixer.music.play(1, 0)
 
         #draw all basketballs to the screen and apply camera, and check for collison
         #if ball hits platform, delete ball. if hits enenmy, delete enemy & ball
         for ball in self.player.ball_list:
             self.screen.blit(ball.image, camera.apply(ball))
+
 
         pygame.sprite.groupcollide(self.player.ball_list, self.platform_list, True, False)
         pygame.sprite.groupcollide(self.player.ball_list, self.invincible_enemy_list, True, False)
@@ -411,6 +426,9 @@ class Game:
         #+10 score if you kill enemy
         if pygame.sprite.groupcollide(self.enemy_list, self.player.ball_list, True, True):
             self.score += 10
+            self.level_score += 10
+            pygame.mixer.music.load('data/Audio/Jump_on_enemy.wav')
+            pygame.mixer.music.play(1,0)
 
         #print score and fps in top right corner.
         self.print_msg_to_screen('fps: '+self.printfps(), WHITE, self.screen, 'small', -HALF_WINDOW_WIDTH+60, -HALF_WINDOW_HEIGHT+70)

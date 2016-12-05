@@ -5,7 +5,7 @@ class Level00(Level):
     def __init__(self):
         super().__init__()
 
-        self.player = Player(56, 112)
+        self.player = Player(96, 112)
 
 
         self.level =[
@@ -20,8 +20,8 @@ class Level00(Level):
             "P       P                                        P",
             "P       PPPP                                     PPPPPPPPPPPP",
             "P          P                                     P          P",
-            "P          PPP                                   P          P",
-            "P            P      K   C   K  I  C  E  I    C   P          P",
+            "P          PPP                       E           P          P",
+            "P            P      K   C   K  I  C     I    C   P          P",
             "P            PPP    RRRRRRRRR   RRRRRRRR   RRRRRRP          P",
             "P                   UUUUUUUUU                               P",
             "P                                                           P",
@@ -29,7 +29,7 @@ class Level00(Level):
             "P                                                           P",
             "P                                                           P",
             "P                                                           P",
-            "R      E     E    JRJ Z          Z                      X   R",
+            "R      E     E    JRJ Z          Z  J    J              X   R",
             "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR", ]
 
     

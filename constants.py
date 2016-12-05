@@ -9,7 +9,7 @@ HALF_WINDOW_WIDTH = WINDOW_WIDTH/2
 HALF_WINDOW_HEIGHT = WINDOW_HEIGHT/2
 SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 #set game title
-TITLE = "Husky World"
+TITLE = "Super Husky World"
 #Colors
 RED = (255,0,0)
 ORANGE = (255,165,0)
@@ -22,10 +22,10 @@ BLACK = (0,0,0)
 NAVY_BLUE = (0,14,47)
 
 #Fonts
+pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.init()
 pygame.font.init()
-pygame.mixer.init()
-pygame.display.set_mode(SIZE)
+SCREEN = pygame.display.set_mode(SIZE)
 SMALLFONT = pygame.font.Font('data/fonts/uconn.ttf', 25)
 MEDIUMFONT = pygame.font.Font('data/fonts/uconn.ttf', 50)
 LARGEFONT = pygame.font.Font('data/fonts/uconn.ttf', 75)
